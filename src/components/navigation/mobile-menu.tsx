@@ -9,8 +9,8 @@ import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 
 const languages = [
-  { code: "id", label: "Bahasa Indonesia", flag: "🇮🇩" },
-  { code: "en", label: "English", flag: "🇺🇸" },
+  { code: "id", label: "Bahasa Indonesia", flag: "ID" },
+  { code: "en", label: "English", flag: "EN" },
 ];
 
 export function MobileMenu() {
@@ -78,7 +78,7 @@ export function MobileMenu() {
                         onClick={() => switchLocale(lang.code)}
                         className="flex items-center gap-3 rounded-lg px-3 py-2 text-body font-medium text-foreground/70 transition-all hover:bg-muted hover:text-foreground"
                       >
-                        <span className="text-lg">{lang.flag}</span>
+                        <span className="flex h-6 w-8 items-center justify-center rounded bg-red-600 text-[11px] font-bold text-white">{lang.flag}</span>
                         <span className="flex-1 text-left">{lang.label}</span>
                         {locale === lang.code && <Check size={14} className="text-accent" />}
                       </button>
