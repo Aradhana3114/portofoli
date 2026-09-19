@@ -13,8 +13,8 @@ import { useTheme } from "@/components/theme-provider";
 import { MobileMenu } from "./mobile-menu";
 
 const languages = [
-  { code: "id", label: "Bahasa Indonesia", flag: "ID" },
-  { code: "en", label: "English", flag: "EN" },
+  { code: "id", label: "Bahasa Indonesia", flag: "/images/bendera/indonesia.svg" },
+  { code: "en", label: "English", flag: "/images/bendera/amerika.svg" },
 ];
 
 export function Navbar() {
@@ -101,7 +101,7 @@ export function Navbar() {
               aria-label="Switch language"
               className="flex h-9 items-center gap-1.5 rounded-lg border border-border bg-background px-3 text-caption font-medium transition-all hover:border-foreground hover:bg-foreground hover:text-background"
             >
-              <span className="flex h-5 items-center rounded bg-red-600 px-1 text-[10px] font-bold text-white">{languages.find((l) => l.code === locale)?.flag}</span>
+              <Image src={languages.find((l) => l.code === locale)?.flag || ""} alt="Flag" width={20} height={14} className="rounded-[2px]" />
               <span>{locale.toUpperCase()}</span>
             </button>
             {langOpen && (
@@ -112,7 +112,7 @@ export function Navbar() {
                     onClick={() => switchLocale(lang.code)}
                     className="flex w-full items-center gap-3 px-4 py-2.5 text-body text-foreground/80 transition-all hover:bg-muted hover:text-foreground"
                   >
-                    <span className="flex h-6 w-8 items-center justify-center rounded bg-red-600 text-[11px] font-bold text-white">{lang.flag}</span>
+                    <Image src={lang.flag} alt={lang.label} width={24} height={16} className="rounded-[2px]" />
                     <span className="flex-1 text-left">{lang.label}</span>
                     {locale === lang.code && <Check size={14} className="text-accent" />}
                   </button>

@@ -2,15 +2,16 @@
 
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { Menu, X, Sun, Moon, Globe, Check } from "lucide-react";
+import { Menu, X, Sun, Moon, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { useTheme } from "@/components/theme-provider";
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 
 const languages = [
-  { code: "id", label: "Bahasa Indonesia", flag: "ID" },
-  { code: "en", label: "English", flag: "EN" },
+  { code: "id", label: "Bahasa Indonesia", flag: "/images/bendera/indonesia.svg" },
+  { code: "en", label: "English", flag: "/images/bendera/amerika.svg" },
 ];
 
 export function MobileMenu() {
@@ -78,7 +79,7 @@ export function MobileMenu() {
                         onClick={() => switchLocale(lang.code)}
                         className="flex items-center gap-3 rounded-lg px-3 py-2 text-body font-medium text-foreground/70 transition-all hover:bg-muted hover:text-foreground"
                       >
-                        <span className="flex h-6 w-8 items-center justify-center rounded bg-red-600 text-[11px] font-bold text-white">{lang.flag}</span>
+                        <Image src={lang.flag} alt={lang.label} width={24} height={16} className="rounded-[2px]" />
                         <span className="flex-1 text-left">{lang.label}</span>
                         {locale === lang.code && <Check size={14} className="text-accent" />}
                       </button>
