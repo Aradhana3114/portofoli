@@ -25,7 +25,13 @@ export function About() {
         >
           <h2 className="mb-4 text-h1 font-display">{t("about.title")}</h2>
           <div className="mx-auto flex items-center justify-center gap-2 text-h3">
-            <span className="text-6xl">👋</span>
+            <motion.span
+              className="text-6xl inline-block origin-[70%_70%]"
+              animate={{ rotate: [0, 14, -8, 14, -4, 10, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+            >
+              👋
+            </motion.span>
           </div>
         </motion.div>
 
