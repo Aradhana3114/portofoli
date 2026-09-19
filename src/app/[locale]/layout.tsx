@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { Familjen_Grotesk, Inter } from "next/font/google";
+import type { Metadata } from "next";
 import "../globals.css";
 
 const displayFont = Familjen_Grotesk({
@@ -17,6 +18,13 @@ const bodyFont = Inter({
   variable: "--font-body",
   display: "swap",
 });
+
+export const metadata: Metadata = {
+  icons: {
+    icon: "/images/logo.png",
+    apple: "/images/logo.png",
+  },
+};
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { Sun, Moon, Globe, Check } from "lucide-react";
 import { useLocale } from "next-intl";
@@ -72,8 +73,8 @@ export function Navbar() {
       <div className="container-editorial flex h-16 items-center justify-between">
         {/* Logo */}
         <Link href="#home" className="group flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-foreground bg-foreground text-background transition-all group-hover:bg-background group-hover:text-foreground">
-            <span className="font-display text-h3 font-bold">{profile.name.charAt(0)}</span>
+          <div className="relative h-10 w-10 overflow-hidden rounded-lg border-2 border-foreground transition-all group-hover:border-accent">
+            <Image src="/images/logo.png" alt="Logo" fill className="object-contain" />
           </div>
           <span className="hidden font-display text-h3 font-bold sm:block">{profile.name.split(" ")[0]}</span>
         </Link>
