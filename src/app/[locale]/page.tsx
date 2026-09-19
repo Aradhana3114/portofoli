@@ -11,6 +11,7 @@ import { Contact } from "@/components/sections/contact";
 import { Footer } from "@/components/footer";
 import { SplashScreen } from "@/components/splash-screen";
 import { ThemeProvider } from "@/components/theme-provider";
+import { DynamicFavicon } from "@/components/dynamic-favicon";
 
 export default async function Home({
   params,
@@ -24,6 +25,7 @@ export default async function Home({
     <>
       <SplashScreen />
       <ThemeProvider>
+        <DynamicFavicon />
         <Navbar />
         <main>
           <Hero />

@@ -7,6 +7,7 @@ import { Footer } from "@/components/footer";
 import { ProjectDetail } from "@/components/project/project-detail";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SplashScreen } from "@/components/splash-screen";
+import { DynamicFavicon } from "@/components/dynamic-favicon";
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
@@ -40,6 +41,7 @@ export default async function ProjectPage({
     <>
       <SplashScreen />
       <ThemeProvider>
+        <DynamicFavicon />
         <Navbar />
         <ProjectDetail project={project} />
         <Footer />

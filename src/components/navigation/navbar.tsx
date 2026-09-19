@@ -74,7 +74,7 @@ export function Navbar() {
         {/* Logo */}
         <Link href="#home" className="group flex items-center gap-2">
           <div className="relative h-10 w-10 overflow-hidden rounded-lg border-2 border-foreground transition-all group-hover:border-accent">
-            <Image src="/images/logo.png" alt="Logo" fill className="object-contain" />
+            <Image src={theme === "dark" ? "/images/putih.png" : "/images/hitam.png"} alt="Logo" fill className="object-contain" />
           </div>
           <span className="hidden font-display text-h3 font-bold sm:block">{profile.name.split(" ")[0]}</span>
         </Link>
