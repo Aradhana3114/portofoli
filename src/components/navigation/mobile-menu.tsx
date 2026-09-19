@@ -2,11 +2,16 @@
 
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { Menu, X, Sun, Moon, Globe } from "lucide-react";
+import { Menu, X, Sun, Moon, Globe, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/components/theme-provider";
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
+
+const languages = [
+  { code: "id", label: "Bahasa Indonesia", flag: "🇮🇩" },
+  { code: "en", label: "English", flag: "🇺🇸" },
+];
 
 export function MobileMenu() {
   const t = useTranslations();
@@ -25,11 +30,11 @@ export function MobileMenu() {
     { href: "#contact", label: t("nav.contact") },
   ];
 
-  const switchLocale = () => {
-    const newLocale = locale === "id" ? "en" : "id";
+  const switchLocale = (newLocale: string) => {
     const segments = pathname.split("/");
     segments[1] = newLocale;
     router.push(segments.join("/"));
+    setOpen(false);
   };
 
   return (
@@ -64,13 +69,22 @@ export function MobileMenu() {
                 </li>
               ))}
               <li className="border-t border-border pt-2 mt-2">
-                <button
-                  onClick={switchLocale}
-                  className="flex items-center gap-2 rounded-lg px-4 py-3 text-body font-medium text-foreground/70 transition-all hover:bg-muted hover:text-foreground"
-                >
-                  <Globe size={16} />
-                  {locale === "id" ? "English" : "Bahasa Indonesia"}
-                </button>
+                <div className="px-4 py-2">
+                  <p className="mb-2 text-caption font-semibold text-foreground/50">Language</p>
+                  <div className="flex flex-col gap-1">
+                    {languages.map((lang) => (
+                      <button
+                        key={lang.code}
+                        onClick={() => switchLocale(lang.code)}
+                        className="flex items-center gap-3 rounded-lg px-3 py-2 text-body font-medium text-foreground/70 transition-all hover:bg-muted hover:text-foreground"
+                      >
+                        <span className="text-lg">{lang.flag}</span>
+                        <span className="flex-1 text-left">{lang.label}</span>
+                        {locale === lang.code && <Check size={14} className="text-accent" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </li>
               <li>
                 <button

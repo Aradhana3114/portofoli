@@ -1,15 +1,20 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { Sun, Moon, Globe } from "lucide-react";
+import { Sun, Moon, Globe, Check } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 import { profile } from "@/data/profile";
 import { useTheme } from "@/components/theme-provider";
 import { MobileMenu } from "./mobile-menu";
+
+const languages = [
+  { code: "id", label: "Bahasa Indonesia", flag: "🇮🇩" },
+  { code: "en", label: "English", flag: "🇺🇸" },
+];
 
 export function Navbar() {
   const t = useTranslations();
@@ -20,6 +25,8 @@ export function Navbar() {
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { theme, toggle } = useTheme();
+  const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
 
   const links = [
     { href: "#home", label: t("nav.home") },
@@ -36,11 +43,21 @@ export function Navbar() {
     setScrolled(latest > 20);
   });
 
-  const switchLocale = () => {
-    const newLocale = locale === "id" ? "en" : "id";
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const switchLocale = (newLocale: string) => {
     const segments = pathname.split("/");
     segments[1] = newLocale;
     router.push(segments.join("/"));
+    setLangOpen(false);
   };
 
   return (
@@ -76,13 +93,33 @@ export function Navbar() {
 
         {/* Actions */}
         <div className="hidden items-center gap-2 md:flex">
-          <button
-            onClick={switchLocale}
-            aria-label="Switch language"
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-background transition-all hover:border-foreground hover:bg-foreground hover:text-background"
-          >
-            <Globe size={16} />
-          </button>
+          {/* Language Dropdown */}
+          <div ref={langRef} className="relative">
+            <button
+              onClick={() => setLangOpen(!langOpen)}
+              aria-label="Switch language"
+              className="flex h-9 items-center gap-1.5 rounded-lg border border-border bg-background px-3 text-caption font-medium transition-all hover:border-foreground hover:bg-foreground hover:text-background"
+            >
+              <Globe size={14} />
+              <span>{locale.toUpperCase()}</span>
+            </button>
+            {langOpen && (
+              <div className="absolute right-0 top-full mt-2 w-48 overflow-hidden rounded-xl border border-border bg-background shadow-lg">
+                {languages.map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => switchLocale(lang.code)}
+                    className="flex w-full items-center gap-3 px-4 py-2.5 text-body text-foreground/80 transition-all hover:bg-muted hover:text-foreground"
+                  >
+                    <span className="text-lg">{lang.flag}</span>
+                    <span className="flex-1 text-left">{lang.label}</span>
+                    {locale === lang.code && <Check size={14} className="text-accent" />}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
           <button
             onClick={toggle}
             aria-label="Toggle dark mode"
