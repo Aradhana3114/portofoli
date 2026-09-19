@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 255 255 255;
+  --foreground: 0 0 0;
+  --muted: 245 245 245;
+  --border: 229 229 229;
+  --accent: 0 0 0;
+  --accent-foreground: 255 255 255;
+  --accent-secondary: 59 130 246;
+}
+
+.dark {
+  --background: 10 10 10;
+  --foreground: 245 245 245;
+  --muted: 25 25 25;
+  --border: 40 40 40;
+  --accent: 255 255 255;
+  --accent-foreground: 0 0 0;
+  --accent-secondary: 96 165 250;
+}
+
+* {
+  border-color: rgb(var(--border));
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: rgb(var(--background));
+  color: rgb(var(--foreground));
+  font-feature-settings: "ss01" on, "ss02" on;
+  overflow-x: hidden;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+::selection {
+  background: rgb(var(--accent) / 0.2);
+  color: rgb(var(--foreground));
+}
+
+.container-editorial {
+  @apply mx-auto max-w-content px-6 md:px-10 lg:px-16;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
