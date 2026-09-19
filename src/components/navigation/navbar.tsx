@@ -100,7 +100,7 @@ export function Navbar() {
               aria-label="Switch language"
               className="flex h-9 items-center gap-1.5 rounded-lg border border-border bg-background px-3 text-caption font-medium transition-all hover:border-foreground hover:bg-foreground hover:text-background"
             >
-              <Globe size={14} />
+              <span className="text-sm">{languages.find((l) => l.code === locale)?.flag}</span>
               <span>{locale.toUpperCase()}</span>
             </button>
             {langOpen && (
