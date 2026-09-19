@@ -10,8 +10,8 @@ import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 
 const languages = [
-  { code: "id", label: "Bahasa Indonesia", flag: "/images/bendera/indonesia.svg" },
-  { code: "en", label: "English", flag: "/images/bendera/amerika.svg" },
+  { code: "id", label: "Bahasa Indonesia", flag: "/images/bendera/indonesia.webp" },
+  { code: "en", label: "English", flag: "/images/bendera/amerika.webp" },
 ];
 
 export function MobileMenu() {
