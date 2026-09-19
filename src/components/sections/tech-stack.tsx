@@ -1,25 +1,29 @@
 "use client";
 
+import { useTranslations, useLocale } from "next-intl";
 import { motion } from "framer-motion";
-import { techStack } from "@/data/skills";
+import { techStack, skillCategories } from "@/data/skills";
 import { useIntersection } from "@/hooks/use-intersection";
 
 export function TechStack() {
+  const t = useTranslations();
+  const locale = useLocale();
   const { ref, isVisible } = useIntersection<HTMLDivElement>();
+  const categories = skillCategories[locale] || skillCategories.id;
 
   return (
     <section className="border-b border-border py-24">
       <div ref={ref} className="container-editorial">
-        <h2 className="mb-12 text-h2 font-display">Tech Stack</h2>
+        <h2 className="mb-12 text-h2 font-display">{t("techStackSection.title")}</h2>
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {techStack.map((group, i) => (
             <motion.div
-              key={group.category}
+              key={group.categoryKey}
               initial={{ opacity: 0, y: 16 }}
               animate={isVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.4, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
             >
-              <h3 className="mb-4 text-caption text-foreground/50">{group.category}</h3>
+              <h3 className="mb-4 text-caption text-foreground/50">{categories[group.categoryKey.replace("categories.", "")] || group.categoryKey}</h3>
               <ul className="flex flex-col gap-2">
                 {group.items.map((item) => (
                   <li key={item.name} className="flex items-center justify-between border-b border-border/60 py-2 text-body">
@@ -31,7 +35,7 @@ export function TechStack() {
                         ? "text-blue-600 dark:text-blue-400"
                         : "text-foreground/40"
                     }`}>
-                      {item.level}
+                      {item.level ? t(`techStackSection.levels.${item.level}`) : ""}
                     </span>
                   </li>
                 ))}

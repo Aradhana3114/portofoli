@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { journey } from "@/data/journey";
@@ -13,6 +14,7 @@ const iconMap = {
 };
 
 export function Journey() {
+  const t = useTranslations();
   const { ref, isVisible } = useIntersection<HTMLDivElement>();
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
@@ -29,9 +31,9 @@ export function Journey() {
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="mb-12"
         >
-          <h2 className="text-h1 font-display">My Journey</h2>
+          <h2 className="text-h1 font-display">{t("journey.title")}</h2>
           <p className="mt-4 text-body text-foreground/60">
-            Milestones of growth: From school projects to real-world applications.
+            {t("journey.subtitle")}
           </p>
         </motion.div>
 
@@ -45,7 +47,7 @@ export function Journey() {
 
             return (
               <motion.div
-                key={`${item.year}-${item.title}`}
+                key={`${item.year}-${item.titleKey}`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={isVisible ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
@@ -69,10 +71,10 @@ export function Journey() {
                             <span className="rounded-md bg-foreground px-2 py-0.5 text-metadata font-bold text-background">
                               {item.year}
                             </span>
-                            <span className="text-caption text-foreground/60">{item.type}</span>
+                            <span className="text-caption text-foreground/60">{t(`journey.types.${item.type}`)}</span>
                           </div>
-                          <h3 className="text-h3 font-display">{item.title}</h3>
-                          <p className="mt-1 text-body font-medium text-foreground/60">{item.organization}</p>
+                          <h3 className="text-h3 font-display">{t(item.titleKey)}</h3>
+                          <p className="mt-1 text-body font-medium text-foreground/60">{t(item.organizationKey)}</p>
                         </div>
 
                         <motion.div
@@ -87,7 +89,7 @@ export function Journey() {
                       {/* Collapsed Preview */}
                       {!isExpanded && (
                         <p className="mt-3 line-clamp-2 text-body text-foreground/70">
-                          {item.description}
+                          {t(item.descriptionKey)}
                         </p>
                       )}
                     </div>
@@ -106,12 +108,12 @@ export function Journey() {
                     >
                       <div className="ml-[72px] mt-4 space-y-4 rounded-xl border-2 border-border bg-muted p-6">
                         <p className="text-body leading-relaxed text-foreground/80">
-                          {item.description}
+                          {t(item.descriptionKey)}
                         </p>
 
                         {item.technologies && item.technologies.length > 0 && (
                           <div>
-                            <p className="mb-2 text-caption font-semibold text-foreground/60">Technologies Used:</p>
+                            <p className="mb-2 text-caption font-semibold text-foreground/60">{t("journey.technologiesUsed")}</p>
                             <div className="flex flex-wrap gap-2">
                               {item.technologies.map((tech) => (
                                 <span
@@ -130,7 +132,7 @@ export function Journey() {
                             onClick={() => setExpandedIndex(null)}
                             className="text-caption font-medium text-foreground/60 hover:text-foreground"
                           >
-                            Click Folder to Close
+                            {t("journey.clickToClose")}
                           </button>
                         </div>
                       </div>

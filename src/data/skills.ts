@@ -2,7 +2,7 @@ import { TechStack } from "./types";
 
 export const techStack: TechStack[] = [
   {
-    category: "Frontend",
+    categoryKey: "categories.frontend",
     items: [
       { name: "Next.js", level: "intermediate" },
       { name: "React", level: "intermediate" },
@@ -11,7 +11,7 @@ export const techStack: TechStack[] = [
     ],
   },
   {
-    category: "Backend",
+    categoryKey: "categories.backend",
     items: [
       { name: "Node.js", level: "intermediate" },
       { name: "Supabase", level: "intermediate" },
@@ -19,14 +19,14 @@ export const techStack: TechStack[] = [
     ],
   },
   {
-    category: "Database",
+    categoryKey: "categories.database",
     items: [
       { name: "PostgreSQL", level: "intermediate" },
       { name: "MySQL", level: "proficient" },
     ],
   },
   {
-    category: "Tools & Design",
+    categoryKey: "categories.tools",
     items: [
       { name: "Git & GitHub", level: "proficient" },
       { name: "Figma", level: "intermediate" },
@@ -34,3 +34,18 @@ export const techStack: TechStack[] = [
     ],
   },
 ];
+
+export const skillCategories: Record<string, Record<string, string>> = {
+  id: {
+    frontend: "Frontend",
+    backend: "Backend",
+    database: "Database",
+    tools: "Tools & Design",
+  },
+  en: {
+    frontend: "Frontend",
+    backend: "Backend",
+    database: "Database",
+    tools: "Tools & Design",
+  },
+};

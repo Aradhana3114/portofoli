@@ -1,22 +1,36 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/components/theme-provider";
-
-const links = [
-  { href: "#home", label: "Home" },
-  { href: "#about", label: "About" },
-  { href: "#work", label: "Projects" },
-  { href: "#journey", label: "Journey" },
-  { href: "#guestbook", label: "Guestbook" },
-  { href: "#contact", label: "Contact" },
-];
+import { useLocale } from "next-intl";
+import { useRouter, usePathname } from "next/navigation";
 
 export function MobileMenu() {
+  const t = useTranslations();
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const { theme, toggle } = useTheme();
+
+  const links = [
+    { href: "#home", label: t("nav.home") },
+    { href: "#about", label: t("nav.about") },
+    { href: "#work", label: t("nav.projects") },
+    { href: "#journey", label: t("nav.journey") },
+    { href: "#guestbook", label: t("nav.guestbook") },
+    { href: "#contact", label: t("nav.contact") },
+  ];
+
+  const switchLocale = () => {
+    const newLocale = locale === "id" ? "en" : "id";
+    const segments = pathname.split("/");
+    segments[1] = newLocale;
+    router.push(segments.join("/"));
+  };
 
   return (
     <div className="md:hidden">
@@ -50,6 +64,15 @@ export function MobileMenu() {
                 </li>
               ))}
               <li className="border-t border-border pt-2 mt-2">
+                <button
+                  onClick={switchLocale}
+                  className="flex items-center gap-2 rounded-lg px-4 py-3 text-body font-medium text-foreground/70 transition-all hover:bg-muted hover:text-foreground"
+                >
+                  <Globe size={16} />
+                  {locale === "id" ? "English" : "Bahasa Indonesia"}
+                </button>
+              </li>
+              <li>
                 <button
                   onClick={toggle}
                   className="flex items-center gap-2 rounded-lg px-4 py-3 text-body font-medium text-foreground/70 transition-all hover:bg-muted hover:text-foreground"

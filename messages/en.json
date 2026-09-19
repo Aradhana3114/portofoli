@@ -1,0 +1,206 @@
+{
+  "common": {
+    "basedIn": "Based in",
+    "year": "Year",
+    "technologies": "Technologies",
+    "sending": "Sending...",
+    "allRights": "All Rights Reserved.",
+    "backToHome": "Back to Home"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "projects": "Projects",
+    "journey": "Journey",
+    "guestbook": "Guestbook",
+    "contact": "Contact"
+  },
+  "hero": {
+    "student": "PPLG STUDENT",
+    "developer": "WEB DEVELOPER",
+    "freelancer": "FREELANCER",
+    "scrollDown": "Scroll Down"
+  },
+  "about": {
+    "title": "About Me",
+    "greeting": "Hi, I'm ",
+    "online": "Online",
+    "hireMe": "Hire Me",
+    "studentGrade": "Current Student - Grade 12",
+    "program": "Software & Game Development",
+    "coursework": "Relevant Coursework:",
+    "courses": {
+      "web": "Web Programming",
+      "db": "Database Systems",
+      "se": "Software Engineering",
+      "oop": "OOP"
+    },
+    "gpa": "GPA / 4.00",
+    "highlySatisfactory": "Highly Satisfactory",
+    "techStack": "Tech Stack",
+    "myFocus": "My Focus"
+  },
+  "works": {
+    "title1": "Selected",
+    "title2": "Works",
+    "subtitle": "A showcase of functional web solutions focused on real-world problems and user experience.",
+    "visitSite": "Visit Site",
+    "readCaseStudy": "Read Case Study"
+  },
+  "projectDetail": {
+    "backToWorks": "Back to Works",
+    "overview": "Overview",
+    "challenge": "The Challenge",
+    "solution": "The Solution",
+    "keyFeatures": "Key Features",
+    "gallery": "Gallery",
+    "results": "Results",
+    "techStack": "Tech Stack",
+    "liveDemo": "Live Demo",
+    "sourceCode": "Source Code",
+    "previousProject": "Previous Project",
+    "nextProject": "Next Project",
+    "caseStudySuffix": " — Case Study"
+  },
+  "services": {
+    "title": "Services"
+  },
+  "journey": {
+    "title": "My Journey",
+    "subtitle": "Milestones of growth: From school projects to real-world applications.",
+    "technologiesUsed": "Technologies Used:",
+    "clickToClose": "Click Folder to Close",
+    "types": {
+      "project": "Project",
+      "education": "Education",
+      "work": "Work",
+      "learning": "Learning"
+    }
+  },
+  "techStackSection": {
+    "title": "Tech Stack",
+    "levels": {
+      "learning": "Learning",
+      "intermediate": "Intermediate",
+      "proficient": "Proficient"
+    }
+  },
+  "guestbook": {
+    "title": "Guestbook",
+    "subtitle": "Leave a message, feedback, or just say hi.",
+    "namePlaceholder": "Name",
+    "messagePlaceholder": "Message",
+    "sign": "Sign Guestbook",
+    "empty": "No messages yet. Be the first!"
+  },
+  "contact": {
+    "title1": "Let's Start",
+    "title2": "A Project",
+    "description": "Interested in working together? Fill out the form or drop me a direct message. I'm available for freelance & full-time roles.",
+    "directEmail": "Direct Email",
+    "socialPresence": "Social Presence",
+    "yourName": "Your Name",
+    "yourEmail": "Your Email",
+    "subject": "Subject",
+    "message": "Message",
+    "namePlaceholder": "John Doe",
+    "emailPlaceholder": "john@example.com",
+    "subjects": {
+      "collaboration": "Project Collaboration",
+      "job": "Job Opportunity",
+      "inquiry": "General Inquiry"
+    },
+    "messagePlaceholder": "Tell me about your project...",
+    "send": "Send Message",
+    "success": "Message sent successfully!"
+  },
+  "splash": {
+    "greeting": "Hello Everyone!"
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "The page you're looking for doesn't exist or has been moved."
+  },
+  "error": {
+    "title": "Something Went Wrong",
+    "description": "An error occurred while loading the project.",
+    "retry": "Try Again"
+  },
+  "profile": {
+    "role": "PPLG Student / Web Developer",
+    "tagline": "Building web experiences that matter.",
+    "bio": "I'm a PPLG student focused on building web applications that are actually used, not just assignments. Currently deepening my Next.js skills and exploring serverless architecture.",
+    "currentFocus": "Deepening Next.js App Router and full-stack patterns with Supabase.",
+    "learning": "Server actions, simple system design, and UI writing fundamentals.",
+    "availability": "Available for freelance projects"
+  },
+  "projects": {
+    "schoolPm": {
+      "title": "School Project Management System",
+      "description": "School project management system for PPLG — tracking tasks, deadlines, and team collaboration.",
+      "category": "Web Application",
+      "overview": "The school needed a better way to manage group tasks across PPLG classes.",
+      "problem": "Tasks and deadlines were scattered across chat groups, making it hard to track who was working on what.",
+      "solution": "A centralized dashboard with per-class boards, member assignments, and deadline notifications.",
+      "features": ["Drag-and-drop task board", "Teacher and student roles", "Activity history per project"],
+      "challenges": ["Designing a flexible database schema for multiple classes", "Maintaining performance as project data grows"],
+      "result": "Used by 3 PPLG classes to manage group tasks for the current semester."
+    },
+    "portfolio": {
+      "title": "Personal Portfolio Website",
+      "description": "Personal portfolio website with an interactive guestbook powered by Supabase.",
+      "category": "Personal Project",
+      "overview": "A personal portfolio to showcase projects and the learning process as a web developer.",
+      "problem": "No centralized place to showcase projects to recruiters or freelance clients.",
+      "solution": "An editorial website with a project index, journey timeline, and guestbook for visitor interaction.",
+      "features": ["Project case study page", "Journey timeline", "Realtime guestbook"],
+      "challenges": ["Keeping the design minimal yet distinctive", "Setting up secure Supabase RLS policies"],
+      "result": "Portfolio ready to use for job applications and freelance projects."
+    },
+    "ecommerce": {
+      "title": "E-Commerce UI Clone (Learning Project)",
+      "description": "Simple e-commerce UI clone for learning state management and reusable components.",
+      "category": "Learning Project",
+      "overview": "A learning project to understand component-driven development patterns.",
+      "problem": "Wanted to understand how to structure scalable e-commerce components.",
+      "solution": "Rebuilt several core pages: product listing, product detail, and shopping cart.",
+      "features": ["Product filtering", "Local shopping cart", "Product detail page"],
+      "challenges": ["Managing cart state without additional libraries"],
+      "result": "Stronger understanding of component composition and props drilling."
+    }
+  },
+  "servicesData": {
+    "webDev": {
+      "title": "Website Development",
+      "description": "Building responsive websites from design to deployment, using Next.js and Tailwind CSS.",
+      "deliverables": ["Landing page", "Company profile", "Portfolio", "Vercel deployment"]
+    },
+    "webApp": {
+      "title": "Web Application",
+      "description": "Web applications with authentication, database, and custom features as needed.",
+      "deliverables": ["Dashboard", "Simple CRUD", "Supabase integration"]
+    },
+    "uiImpl": {
+      "title": "UI Implementation",
+      "description": "Transforming Figma designs into clean, maintainable code.",
+      "deliverables": ["Component library", "Responsive layout", "Basic accessibility"]
+    }
+  },
+  "journeyData": {
+    "portfolio": {
+      "title": "Building Personal Portfolio",
+      "organization": "Personal Project",
+      "description": "Designed and built a personal portfolio from scratch with Next.js and Supabase, including an interactive guestbook."
+    },
+    "schoolPm": {
+      "title": "School Project Management System",
+      "organization": "PPLG Assignment",
+      "description": "Built a complete school project management system with authentication and a dashboard."
+    },
+    "startPplg": {
+      "title": "Started PPLG",
+      "organization": "Vocational School",
+      "description": "Began studying Software & Game Development, with an initial focus on web development."
+    }
+  }
+}

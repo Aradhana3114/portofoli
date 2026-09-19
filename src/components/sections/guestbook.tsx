@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { FormEvent, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { GuestbookEntry } from "@/data/types";
@@ -8,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useIntersection } from "@/hooks/use-intersection";
 
 export function Guestbook() {
+  const t = useTranslations();
   const { ref, isVisible } = useIntersection<HTMLDivElement>();
   const [entries, setEntries] = useState<GuestbookEntry[]>([]);
   const [name, setName] = useState("");
@@ -57,21 +59,21 @@ export function Guestbook() {
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h2 className="mb-6 text-h2 font-display">Guestbook</h2>
+          <h2 className="mb-6 text-h2 font-display">{t("guestbook.title")}</h2>
           <p className="mb-8 max-w-md text-body text-foreground/70">
-            Tinggalkan pesan, feedback, atau sekadar say hi.
+            {t("guestbook.subtitle")}
           </p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <Input
-              placeholder="Nama"
+              placeholder={t("guestbook.namePlaceholder")}
               value={name}
               onChange={(e) => setName(e.target.value)}
               maxLength={50}
               required
             />
             <Textarea
-              placeholder="Pesan"
+              placeholder={t("guestbook.messagePlaceholder")}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               maxLength={500}
@@ -80,7 +82,7 @@ export function Guestbook() {
             />
             {status === "error" && <p className="text-caption text-red-600">{errorMsg}</p>}
             <Button type="submit" disabled={status === "loading"}>
-              {status === "loading" ? "Sending..." : "Sign Guestbook"}
+              {status === "loading" ? t("common.sending") : t("guestbook.sign")}
             </Button>
           </form>
         </motion.div>
@@ -92,7 +94,7 @@ export function Guestbook() {
           className="flex max-h-[420px] flex-col gap-4 overflow-y-auto border-t border-border pt-6 md:border-t-0 md:border-l md:pl-16 md:pt-0"
         >
           {entries.length === 0 && (
-            <p className="text-body text-foreground/50">Belum ada pesan. Jadilah yang pertama.</p>
+            <p className="text-body text-foreground/50">{t("guestbook.empty")}</p>
           )}
           {entries.map((entry) => (
             <div key={entry.id} className="border-b border-border/60 pb-4">

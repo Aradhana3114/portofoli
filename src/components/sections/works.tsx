@@ -1,11 +1,13 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { projects } from "@/data/projects";
 import { ProjectCard } from "@/components/project/project-card";
 import { useIntersection } from "@/hooks/use-intersection";
 
 export function Works() {
+  const t = useTranslations();
   const { ref, isVisible } = useIntersection<HTMLDivElement>();
   const featured = projects.filter((p) => p.featured);
 
@@ -18,10 +20,10 @@ export function Works() {
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="mb-12"
         >
-          <h2 className="mb-2 text-h1 font-display">Selected</h2>
-          <h2 className="text-h1 font-display">Works</h2>
+          <h2 className="mb-2 text-h1 font-display">{t("works.title1")}</h2>
+          <h2 className="text-h1 font-display">{t("works.title2")}</h2>
           <p className="mt-4 text-body text-foreground/60">
-            A showcase of functional web solutions focused on real-world problems and user experience.
+            {t("works.subtitle")}
           </p>
         </motion.div>
 

@@ -1,33 +1,47 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import Link from "next/link";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, Globe } from "lucide-react";
+import { useLocale } from "next-intl";
+import { useRouter, usePathname } from "next/navigation";
 import { profile } from "@/data/profile";
 import { useTheme } from "@/components/theme-provider";
 import { MobileMenu } from "./mobile-menu";
 
-const links = [
-  { href: "#home", label: "Home" },
-  { href: "#about", label: "About" },
-  { href: "#work", label: "Projects" },
-  { href: "#journey", label: "Journey" },
-  { href: "#guestbook", label: "Guestbook" },
-  { href: "#contact", label: "Contact" },
-];
-
 export function Navbar() {
+  const t = useTranslations();
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { theme, toggle } = useTheme();
+
+  const links = [
+    { href: "#home", label: t("nav.home") },
+    { href: "#about", label: t("nav.about") },
+    { href: "#work", label: t("nav.projects") },
+    { href: "#journey", label: t("nav.journey") },
+    { href: "#guestbook", label: t("nav.guestbook") },
+    { href: "#contact", label: t("nav.contact") },
+  ];
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0;
     setHidden(latest > previous && latest > 120);
     setScrolled(latest > 20);
   });
+
+  const switchLocale = () => {
+    const newLocale = locale === "id" ? "en" : "id";
+    const segments = pathname.split("/");
+    segments[1] = newLocale;
+    router.push(segments.join("/"));
+  };
 
   return (
     <motion.header
@@ -60,8 +74,15 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Dark Mode Toggle */}
+        {/* Actions */}
         <div className="hidden items-center gap-2 md:flex">
+          <button
+            onClick={switchLocale}
+            aria-label="Switch language"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-background transition-all hover:border-foreground hover:bg-foreground hover:text-background"
+          >
+            <Globe size={16} />
+          </button>
           <button
             onClick={toggle}
             aria-label="Toggle dark mode"

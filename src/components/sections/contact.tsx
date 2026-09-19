@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Github, Linkedin, Instagram, Send } from "lucide-react";
@@ -8,12 +9,13 @@ import { socials } from "@/data/socials";
 import { useIntersection } from "@/hooks/use-intersection";
 
 const socialLinks = [
-  { label: "LinkedIn", href: `https://linkedin.com/in/${socials.linkedin}`, icon: Linkedin },
-  { label: "GitHub", href: `https://github.com/${socials.github}`, icon: Github },
-  { label: "Instagram", href: `https://instagram.com/${socials.instagram}`, icon: Instagram },
+  { key: "linkedin", href: `https://linkedin.com/in/${socials.linkedin}`, icon: Linkedin },
+  { key: "github", href: `https://github.com/${socials.github}`, icon: Github },
+  { key: "instagram", href: `https://instagram.com/${socials.instagram}`, icon: Instagram },
 ];
 
 export function Contact() {
+  const t = useTranslations();
   const { ref, isVisible } = useIntersection<HTMLDivElement>();
   const [formData, setFormData] = useState({
     name: "",
@@ -62,10 +64,10 @@ export function Contact() {
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="mb-12 text-center"
         >
-          <h2 className="mb-4 text-h1 font-display">Let's Start</h2>
-          <h2 className="text-h1 font-display">A Project</h2>
+          <h2 className="mb-4 text-h1 font-display">{t("contact.title1")}</h2>
+          <h2 className="text-h1 font-display">{t("contact.title2")}</h2>
           <p className="mx-auto mt-6 max-w-2xl text-body text-foreground/70">
-            Interested in working together? Fill out the form or drop me a direct message. I'm available for freelance & full-time roles.
+            {t("contact.description")}
           </p>
         </motion.div>
 
@@ -78,7 +80,7 @@ export function Contact() {
             className="space-y-8"
           >
             <div>
-              <h3 className="mb-4 text-h3 font-display">Direct Email</h3>
+              <h3 className="mb-4 text-h3 font-display">{t("contact.directEmail")}</h3>
               <a
                 href={`mailto:${profile.email}`}
                 className="text-h3 font-medium text-foreground/80 transition-colors hover:text-accent-secondary"
@@ -88,16 +90,16 @@ export function Contact() {
             </div>
 
             <div>
-              <h3 className="mb-4 text-h3 font-display">Social Presence</h3>
+              <h3 className="mb-4 text-h3 font-display">{t("contact.socialPresence")}</h3>
               <div className="flex flex-wrap gap-4">
-                {socialLinks.map(({ label, href, icon: Icon }) => (
+                {socialLinks.map(({ key, href, icon: Icon }) => (
                   <a
-                    key={label}
+                    key={key}
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-border bg-background transition-all hover:border-foreground hover:bg-foreground hover:text-background"
-                    aria-label={label}
+                    aria-label={key}
                   >
                     <Icon size={20} />
                   </a>
@@ -115,7 +117,7 @@ export function Contact() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="name" className="mb-2 block text-caption font-semibold text-foreground/70">
-                  Your Name
+                  {t("contact.yourName")}
                 </label>
                 <input
                   type="text"
@@ -125,13 +127,13 @@ export function Contact() {
                   onChange={handleChange}
                   required
                   className="w-full rounded-lg border-2 border-border bg-background px-4 py-3 text-body transition-all focus:border-foreground focus:outline-none"
-                  placeholder="John Doe"
+                  placeholder={t("contact.namePlaceholder")}
                 />
               </div>
 
               <div>
                 <label htmlFor="email" className="mb-2 block text-caption font-semibold text-foreground/70">
-                  Your Email
+                  {t("contact.yourEmail")}
                 </label>
                 <input
                   type="email"
@@ -141,13 +143,13 @@ export function Contact() {
                   onChange={handleChange}
                   required
                   className="w-full rounded-lg border-2 border-border bg-background px-4 py-3 text-body transition-all focus:border-foreground focus:outline-none"
-                  placeholder="john@example.com"
+                  placeholder={t("contact.emailPlaceholder")}
                 />
               </div>
 
               <div>
                 <label htmlFor="subject" className="mb-2 block text-caption font-semibold text-foreground/70">
-                  Subject
+                  {t("contact.subject")}
                 </label>
                 <select
                   id="subject"
@@ -156,15 +158,15 @@ export function Contact() {
                   onChange={handleChange}
                   className="w-full rounded-lg border-2 border-border bg-background px-4 py-3 text-body transition-all focus:border-foreground focus:outline-none"
                 >
-                  <option value="Project Collaboration">Project Collaboration</option>
-                  <option value="Job Opportunity">Job Opportunity</option>
-                  <option value="General Inquiry">General Inquiry</option>
+                  <option value="Project Collaboration">{t("contact.subjects.collaboration")}</option>
+                  <option value="Job Opportunity">{t("contact.subjects.job")}</option>
+                  <option value="General Inquiry">{t("contact.subjects.inquiry")}</option>
                 </select>
               </div>
 
               <div>
                 <label htmlFor="message" className="mb-2 block text-caption font-semibold text-foreground/70">
-                  Message
+                  {t("contact.message")}
                 </label>
                 <textarea
                   id="message"
@@ -174,12 +176,12 @@ export function Contact() {
                   required
                   rows={6}
                   className="w-full rounded-lg border-2 border-border bg-background px-4 py-3 text-body transition-all focus:border-foreground focus:outline-none"
-                  placeholder="Tell me about your project..."
+                  placeholder={t("contact.messagePlaceholder")}
                 />
               </div>
 
               {status === "success" && (
-                <p className="text-caption text-green-600">Pesan berhasil dikirim!</p>
+                <p className="text-caption text-green-600">{t("contact.success")}</p>
               )}
               {status === "error" && (
                 <p className="text-caption text-red-600">{errorMsg}</p>
@@ -189,7 +191,7 @@ export function Contact() {
                 disabled={status === "loading"}
                 className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-foreground bg-foreground px-6 py-4 font-display text-body font-bold uppercase tracking-wider text-background transition-all hover:bg-background hover:text-foreground disabled:opacity-50"
               >
-                {status === "loading" ? "Sending..." : "Send Message"}
+                {status === "loading" ? t("common.sending") : t("contact.send")}
                 <Send size={18} />
               </button>
             </form>

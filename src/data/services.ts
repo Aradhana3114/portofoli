@@ -2,18 +2,31 @@ import { Service } from "./types";
 
 export const services: Service[] = [
   {
-    title: "Website Development",
-    description: "Membangun website responsif dari desain hingga deploy, menggunakan Next.js dan Tailwind CSS.",
-    deliverables: ["Landing page", "Company profile", "Portfolio", "Deployment ke Vercel"],
+    titleKey: "servicesData.webDev.title",
+    descriptionKey: "servicesData.webDev.description",
+    deliverablesKeys: [
+      "servicesData.webDev.deliverables.0",
+      "servicesData.webDev.deliverables.1",
+      "servicesData.webDev.deliverables.2",
+      "servicesData.webDev.deliverables.3",
+    ],
   },
   {
-    title: "Web Application",
-    description: "Aplikasi web dengan autentikasi, database, dan fitur custom sesuai kebutuhan.",
-    deliverables: ["Dashboard", "CRUD sederhana", "Integrasi Supabase"],
+    titleKey: "servicesData.webApp.title",
+    descriptionKey: "servicesData.webApp.description",
+    deliverablesKeys: [
+      "servicesData.webApp.deliverables.0",
+      "servicesData.webApp.deliverables.1",
+      "servicesData.webApp.deliverables.2",
+    ],
   },
   {
-    title: "UI Implementation",
-    description: "Mengubah desain Figma menjadi kode yang rapi dan mudah dikembangkan.",
-    deliverables: ["Component library", "Responsive layout", "Aksesibilitas dasar"],
+    titleKey: "servicesData.uiImpl.title",
+    descriptionKey: "servicesData.uiImpl.description",
+    deliverablesKeys: [
+      "servicesData.uiImpl.deliverables.0",
+      "servicesData.uiImpl.deliverables.1",
+      "servicesData.uiImpl.deliverables.2",
+    ],
   },
 ];

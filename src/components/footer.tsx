@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Github, Linkedin, Instagram } from "lucide-react";
 import { profile } from "@/data/profile";
 import { socials } from "@/data/socials";
@@ -9,6 +10,7 @@ const socialLinks = [
 ];
 
 export function Footer() {
+  const t = useTranslations();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -17,7 +19,7 @@ export function Footer() {
         <div className="flex flex-col items-center justify-between gap-6 md:flex-row md:text-left">
           <div>
             <p className="text-body font-medium text-foreground">
-              © {currentYear} {profile.name}. All Rights Reserved.
+              © {currentYear} {profile.name}. {t("common.allRights")}
             </p>
           </div>
 

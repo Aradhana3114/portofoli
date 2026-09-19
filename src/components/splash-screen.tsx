@@ -1,11 +1,12 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const text = "Halo Everyone!";
-
 export function SplashScreen() {
+  const t = useTranslations();
+  const text = t("splash.greeting");
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {

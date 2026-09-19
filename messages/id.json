@@ -1,0 +1,206 @@
+{
+  "common": {
+    "basedIn": "Berdasarkan di",
+    "year": "Tahun",
+    "technologies": "Teknologi",
+    "sending": "Mengirim...",
+    "allRights": "Hak Cipta Dilindungi.",
+    "backToHome": "Kembali ke Beranda"
+  },
+  "nav": {
+    "home": "Beranda",
+    "about": "Tentang",
+    "projects": "Proyek",
+    "journey": "Perjalanan",
+    "guestbook": "Buku Tamu",
+    "contact": "Kontak"
+  },
+  "hero": {
+    "student": "SISWA PPLG",
+    "developer": "WEB DEVELOPER",
+    "freelancer": "FREELANCER",
+    "scrollDown": "Scroll Down"
+  },
+  "about": {
+    "title": "Tentang Saya",
+    "greeting": "Hai, saya ",
+    "online": "Online",
+    "hireMe": "Hire Me",
+    "studentGrade": "Siswa Aktif - Grade 12",
+    "program": "Pengembangan Perangkat Lunak dan Gim",
+    "coursework": "Mata Kuliah Relevan:",
+    "courses": {
+      "web": "Web Programming",
+      "db": "Database Systems",
+      "se": "Software Engineering",
+      "oop": "OOP"
+    },
+    "gpa": "GPA / 4.00",
+    "highlySatisfactory": "Sangat Memuaskan",
+    "techStack": "Tech Stack",
+    "myFocus": "Fokus Saya"
+  },
+  "works": {
+    "title1": "Selected",
+    "title2": "Works",
+    "subtitle": "Kumpulan solusi web fungsional yang berfokus pada masalah nyata dan pengalaman pengguna.",
+    "visitSite": "Kunjungi Situs",
+    "readCaseStudy": "Baca Case Study"
+  },
+  "projectDetail": {
+    "backToWorks": "Kembali ke Karya",
+    "overview": "Ringkasan",
+    "challenge": "Tantangan",
+    "solution": "Solusi",
+    "keyFeatures": "Fitur Utama",
+    "gallery": "Galeri",
+    "results": "Hasil",
+    "techStack": "Tech Stack",
+    "liveDemo": "Live Demo",
+    "sourceCode": "Source Code",
+    "previousProject": "Proyek Sebelumnya",
+    "nextProject": "Proyek Berikutnya",
+    "caseStudySuffix": " — Case Study"
+  },
+  "services": {
+    "title": "Layanan"
+  },
+  "journey": {
+    "title": "Perjalanan Saya",
+    "subtitle": "Tonggak pertumbuhan: Dari proyek sekolah hingga aplikasi nyata.",
+    "technologiesUsed": "Teknologi yang Digunakan:",
+    "clickToClose": "Klik Folder untuk Menutup",
+    "types": {
+      "project": "Proyek",
+      "education": "Pendidikan",
+      "work": "Pekerjaan",
+      "learning": "Pembelajaran"
+    }
+  },
+  "techStackSection": {
+    "title": "Tech Stack",
+    "levels": {
+      "learning": "Belajar",
+      "intermediate": "Menengah",
+      "proficient": "Mahir"
+    }
+  },
+  "guestbook": {
+    "title": "Buku Tamu",
+    "subtitle": "Tinggalkan pesan, feedback, atau sekadar say hi.",
+    "namePlaceholder": "Nama",
+    "messagePlaceholder": "Pesan",
+    "sign": "Tanda Tangan",
+    "empty": "Belum ada pesan. Jadilah yang pertama."
+  },
+  "contact": {
+    "title1": "Mari Mulai",
+    "title2": "Proyek",
+    "description": "Tertarik untuk bekerja sama? Isi form atau kirim pesan langsung. Saya tersedia untuk freelance & full-time.",
+    "directEmail": "Email Langsung",
+    "socialPresence": "Kehadiran Sosial",
+    "yourName": "Nama Anda",
+    "yourEmail": "Email Anda",
+    "subject": "Subjek",
+    "message": "Pesan",
+    "namePlaceholder": "John Doe",
+    "emailPlaceholder": "john@example.com",
+    "subjects": {
+      "collaboration": "Kolaborasi Proyek",
+      "job": "Peluang Kerja",
+      "inquiry": "Pertanyaan Umum"
+    },
+    "messagePlaceholder": "Ceritakan tentang proyek Anda...",
+    "send": "Kirim Pesan",
+    "success": "Pesan berhasil dikirim!"
+  },
+  "splash": {
+    "greeting": "Halo Semuanya!"
+  },
+  "notFound": {
+    "title": "Halaman Tidak Ditemukan",
+    "description": "Halaman yang kamu cari tidak ada atau sudah dipindahkan."
+  },
+  "error": {
+    "title": "Terjadi Kesalahan",
+    "description": "Terjadi kesalahan saat memuat project.",
+    "retry": "Coba Lagi"
+  },
+  "profile": {
+    "role": "Siswa PPLG / Web Developer",
+    "tagline": "Membangun pengalaman web yang bermakna.",
+    "bio": "Saya siswa PPLG yang fokus membangun aplikasi web yang benar-benar dipakai, bukan sekadar tugas. Saat ini sedang memperdalam Next.js dan mengeksplorasi arsitektur serverless.",
+    "currentFocus": "Memperdalam Next.js App Router dan pola full-stack dengan Supabase.",
+    "learning": "Server actions, desain sistem sederhana, dan dasar-dasar UI writing.",
+    "availability": "Tersedia untuk proyek freelance"
+  },
+  "projects": {
+    "schoolPm": {
+      "title": "Sistem Manajemen Proyek Sekolah",
+      "description": "Sistem manajemen proyek sekolah untuk PPLG — tracking tugas, deadline, dan kolaborasi tim.",
+      "category": "Aplikasi Web",
+      "overview": "Sekolah membutuhkan cara yang lebih rapi untuk mengelola tugas kelompok lintas kelas PPLG.",
+      "problem": "Tugas dan deadline tersebar di grup chat, sulit dilacak siapa mengerjakan apa.",
+      "solution": "Dashboard terpusat dengan board per kelas, assignment per anggota, dan notifikasi deadline.",
+      "features": ["Board tugas drag-and-drop", "Role guru dan siswa", "Riwayat aktivitas per proyek"],
+      "challenges": ["Merancang skema database yang fleksibel untuk banyak kelas", "Menjaga performa saat data proyek bertambah banyak"],
+      "result": "Dipakai oleh 3 kelas PPLG untuk mengelola tugas kelompok semester berjalan."
+    },
+    "portfolio": {
+      "title": "Website Portofolio Pribadi",
+      "description": "Website portofolio pribadi dengan guestbook interaktif berbasis Supabase.",
+      "category": "Proyek Pribadi",
+      "overview": "Portfolio pribadi untuk menunjukkan proyek dan proses belajar sebagai web developer.",
+      "problem": "Belum punya tempat terpusat untuk showcase proyek ke recruiter atau klien freelance.",
+      "solution": "Website editorial dengan project index, journey timeline, dan guestbook untuk interaksi pengunjung.",
+      "features": ["Halaman case study proyek", "Timeline perjalanan", "Guestbook realtime"],
+      "challenges": ["Menjaga desain tetap minimal namun distinctive", "Setup RLS policy Supabase yang aman"],
+      "result": "Portfolio siap dipakai untuk melamar kerja dan proyek freelance."
+    },
+    "ecommerce": {
+      "title": "Clone UI E-Commerce (Proyek Belajar)",
+      "description": "Clone UI e-commerce sederhana untuk belajar state management dan komponen reusable.",
+      "category": "Proyek Belajar",
+      "overview": "Proyek belajar untuk memahami pola component-driven development.",
+      "problem": "Ingin memahami cara struktur komponen e-commerce yang scalable.",
+      "solution": "Membangun ulang beberapa halaman inti: listing produk, detail produk, dan keranjang.",
+      "features": ["Filter produk", "Keranjang belanja lokal", "Halaman detail produk"],
+      "challenges": ["Mengelola state keranjang tanpa library tambahan"],
+      "result": "Pemahaman lebih kuat soal component composition dan props drilling."
+    }
+  },
+  "servicesData": {
+    "webDev": {
+      "title": "Website Development",
+      "description": "Membangun website responsif dari desain hingga deploy, menggunakan Next.js dan Tailwind CSS.",
+      "deliverables": ["Landing page", "Company profile", "Portfolio", "Deployment ke Vercel"]
+    },
+    "webApp": {
+      "title": "Web Application",
+      "description": "Aplikasi web dengan autentikasi, database, dan fitur custom sesuai kebutuhan.",
+      "deliverables": ["Dashboard", "CRUD sederhana", "Integrasi Supabase"]
+    },
+    "uiImpl": {
+      "title": "UI Implementation",
+      "description": "Mengubah desain Figma menjadi kode yang rapi dan mudah dikembangkan.",
+      "deliverables": ["Component library", "Responsive layout", "Aksesibilitas dasar"]
+    }
+  },
+  "journeyData": {
+    "portfolio": {
+      "title": "Membangun Personal Portfolio",
+      "organization": "Proyek Pribadi",
+      "description": "Mendesain dan membangun portfolio pribadi dari nol dengan Next.js dan Supabase, termasuk guestbook interaktif."
+    },
+    "schoolPm": {
+      "title": "Sistem Manajemen Proyek Sekolah",
+      "organization": "Tugas PPLG",
+      "description": "Membangun sistem manajemen proyek sekolah lengkap dengan autentikasi dan dashboard."
+    },
+    "startPplg": {
+      "title": "Mulai PPLG",
+      "organization": "SMK",
+      "description": "Memulai jurusan Pengembangan Perangkat Lunak dan Gim, fokus awal di web development."
+    }
+  }
+}

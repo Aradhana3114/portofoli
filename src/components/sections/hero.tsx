@@ -1,11 +1,13 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { profile } from "@/data/profile";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, MapPin } from "lucide-react";
 
 export function Hero() {
+  const t = useTranslations();
   const firstName = profile.name.split(" ")[0].toUpperCase();
   const lastName = profile.name.split(" ").slice(1).join(" ").toUpperCase();
 
@@ -24,11 +26,11 @@ export function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
               <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
             </span>
-            <span className="font-medium">{profile.availability}</span>
+            <span className="font-medium">{t("profile.availability")}</span>
           </div>
           <div className="flex items-center gap-1.5 text-caption text-foreground/60">
             <MapPin size={14} />
-            <span>Based in {profile.location}</span>
+            <span>{t("common.basedIn")} {profile.location}</span>
           </div>
         </motion.div>
 
@@ -55,13 +57,13 @@ export function Hero() {
           className="mb-8 flex flex-wrap items-center justify-center gap-3 text-body"
         >
           <span className="rounded-full border border-border bg-foreground px-4 py-1.5 font-medium text-background">
-            PPLG STUDENT
+            {t("hero.student")}
           </span>
           <span className="rounded-full border border-border bg-foreground px-4 py-1.5 font-medium text-background">
-            WEB DEVELOPER
+            {t("hero.developer")}
           </span>
           <span className="rounded-full border border-border bg-muted px-4 py-1.5 font-medium">
-            FREELANCER
+            {t("hero.freelancer")}
           </span>
         </motion.div>
 
@@ -72,7 +74,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-16"
         >
-          <p className="mb-3 text-caption uppercase tracking-wider text-foreground/60">Scroll Down</p>
+          <p className="mb-3 text-caption uppercase tracking-wider text-foreground/60">{t("hero.scrollDown")}</p>
           <motion.a
             href="#about"
             aria-label="Scroll to about section"

@@ -1,9 +1,9 @@
 export interface Project {
   slug: string;
-  title: string;
-  description: string;
+  titleKey: string;
+  descriptionKey: string;
   year: string;
-  category: string;
+  categoryKey: string;
   featured: boolean;
   technologies: string[];
   image: string;
@@ -11,26 +11,26 @@ export interface Project {
   demoUrl?: string;
   githubUrl?: string;
   caseStudy: {
-    overview: string;
-    problem: string;
-    solution: string;
-    features: string[];
-    challenges: string[];
-    result: string;
+    overviewKey: string;
+    problemKey: string;
+    solutionKey: string;
+    featuresKeys: string[];
+    challengesKeys: string[];
+    resultKey: string;
   };
 }
 
 export interface JourneyItem {
   year: string;
-  title: string;
-  organization: string;
-  description: string;
+  titleKey: string;
+  organizationKey: string;
+  descriptionKey: string;
   type: "education" | "project" | "work" | "learning";
   technologies?: string[];
 }
 
 export interface TechStack {
-  category: string;
+  categoryKey: string;
   items: {
     name: string;
     level?: "learning" | "intermediate" | "proficient";
@@ -38,9 +38,9 @@ export interface TechStack {
 }
 
 export interface Service {
-  title: string;
-  description: string;
-  deliverables: string[];
+  titleKey: string;
+  descriptionKey: string;
+  deliverablesKeys: string[];
 }
 
 export interface GuestbookEntry {

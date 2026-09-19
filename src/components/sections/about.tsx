@@ -1,13 +1,18 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { profile } from "@/data/profile";
-import { techStack } from "@/data/skills";
+import { techStack, skillCategories } from "@/data/skills";
+import { useLocale } from "next-intl";
 import { useIntersection } from "@/hooks/use-intersection";
 import { Download, GraduationCap } from "lucide-react";
 
 export function About() {
+  const t = useTranslations();
+  const locale = useLocale();
   const { ref, isVisible } = useIntersection<HTMLDivElement>();
+  const categories = skillCategories[locale] || skillCategories.id;
 
   return (
     <section id="about" className="border-b border-border py-24">
@@ -18,7 +23,7 @@ export function About() {
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="mb-12 text-center"
         >
-          <h2 className="mb-4 text-h1 font-display">About Me</h2>
+          <h2 className="mb-4 text-h1 font-display">{t("about.title")}</h2>
           <div className="mx-auto flex items-center justify-center gap-2 text-h3">
             <span className="text-6xl">👋</span>
           </div>
@@ -32,8 +37,8 @@ export function About() {
             transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="space-y-6"
           >
-            <h3 className="text-h2 font-display">Hi, I'm {profile.name.split(" ")[0]}.</h3>
-            <p className="text-body leading-relaxed text-foreground/80">{profile.bio}</p>
+            <h3 className="text-h2 font-display">{t("about.greeting")}{profile.name.split(" ")[0]}.</h3>
+            <p className="text-body leading-relaxed text-foreground/80">{t("profile.bio")}</p>
 
             {/* Avatar Card */}
             <div className="mt-8 overflow-hidden rounded-2xl border-2 border-foreground bg-muted p-6">
@@ -45,11 +50,11 @@ export function About() {
                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
                       <span className="relative inline-flex h-3 w-3 rounded-full bg-green-500"></span>
                     </span>
-                    <span className="text-caption font-medium text-green-600">Online</span>
+                    <span className="text-caption font-medium text-green-600">{t("about.online")}</span>
                   </div>
                 </div>
                 <div className="rounded-lg bg-accent px-3 py-1 text-caption font-bold text-accent-foreground">
-                  Hire Me
+                  {t("about.hireMe")}
                 </div>
               </div>
               
@@ -70,17 +75,17 @@ export function About() {
                 <div>
                   <div className="mb-2 flex items-center gap-2">
                     <GraduationCap size={20} />
-                    <span className="text-caption font-semibold text-foreground/60">Current Student - Grade 12</span>
+                    <span className="text-caption font-semibold text-foreground/60">{t("about.studentGrade")}</span>
                   </div>
                   <h4 className="text-h3 font-display">SMK AK Nusa Bangsa</h4>
-                  <p className="mt-1 font-medium text-foreground/80">Pengembangan Perangkat Lunak dan Gim</p>
+                  <p className="mt-1 font-medium text-foreground/80">{t("about.program")}</p>
                 </div>
               </div>
               
               <div className="mb-4">
-                <p className="mb-2 text-caption font-semibold text-foreground/60">Relevant Coursework:</p>
+                <p className="mb-2 text-caption font-semibold text-foreground/60">{t("about.coursework")}</p>
                 <div className="flex flex-wrap gap-2">
-                  {["Web Programming", "Database Systems", "Software Engineering", "OOP"].map((course) => (
+                  {[t("about.courses.web"), t("about.courses.db"), t("about.courses.se"), t("about.courses.oop")].map((course) => (
                     <span key={course} className="rounded-md bg-muted px-3 py-1 text-caption">
                       {course}
                     </span>
@@ -92,25 +97,25 @@ export function About() {
                 <div className="flex items-end justify-between">
                   <div>
                     <p className="text-display-sm font-display font-bold">3.8</p>
-                    <p className="text-caption text-foreground/60">GPA / 4.00</p>
+                    <p className="text-caption text-foreground/60">{t("about.gpa")}</p>
                   </div>
-                  <p className="text-caption font-medium">Highly Satisfactory</p>
+                  <p className="text-caption font-medium">{t("about.highlySatisfactory")}</p>
                 </div>
               </div>
             </div>
 
             {/* Tech Stack */}
             <div>
-              <h3 className="mb-6 text-h2 font-display">Tech Stack</h3>
+              <h3 className="mb-6 text-h2 font-display">{t("about.techStack")}</h3>
               <div className="space-y-6">
                 {techStack.map((group, i) => (
                   <motion.div
-                    key={group.category}
+                    key={group.categoryKey}
                     initial={{ opacity: 0, x: -10 }}
                     animate={isVisible ? { opacity: 1, x: 0 } : {}}
                     transition={{ duration: 0.4, delay: 0.3 + i * 0.05, ease: [0.16, 1, 0.3, 1] }}
                   >
-                    <h4 className="mb-3 text-body font-semibold">{group.category}</h4>
+                    <h4 className="mb-3 text-body font-semibold">{categories[group.categoryKey.replace("categories.", "")] || group.categoryKey}</h4>
                     <div className="flex flex-wrap gap-2">
                       {group.items.map((item) => (
                         <span
@@ -128,9 +133,9 @@ export function About() {
 
             {/* My Focus */}
             <div className="rounded-2xl border-2 border-border bg-muted p-6">
-              <h4 className="mb-3 text-h3 font-display">My Focus</h4>
+              <h4 className="mb-3 text-h3 font-display">{t("about.myFocus")}</h4>
               <p className="text-body text-foreground/80">
-                {profile.currentFocus}
+                {t("profile.currentFocus")}
               </p>
             </div>
           </motion.div>
