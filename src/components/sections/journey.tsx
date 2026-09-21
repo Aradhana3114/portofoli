@@ -57,7 +57,7 @@ export function Journey() {
                   onClick={() => toggleExpand(i)}
                   className="w-full text-left transition-all hover:bg-muted/50"
                 >
-                  <div className="flex items-start gap-6 rounded-xl border-2 border-border bg-background p-6 transition-all hover:border-foreground/20">
+                    <div className="flex items-start gap-4 rounded-xl border-2 border-border bg-background p-4 transition-all hover:border-foreground/20 sm:gap-6 sm:p-6">
                     {/* Icon */}
                     <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-border bg-background">
                       <Icon size={20} />
@@ -106,7 +106,7 @@ export function Journey() {
                       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                       className="overflow-hidden"
                     >
-                      <div className="ml-[72px] mt-4 space-y-4 rounded-xl border-2 border-border bg-muted p-6">
+                      <div className="ml-0 mt-4 space-y-4 rounded-xl border-2 border-border bg-muted p-4 sm:ml-[72px] sm:p-6">
                         <p className="text-body leading-relaxed text-foreground/80">
                           {t(item.descriptionKey)}
                         </p>

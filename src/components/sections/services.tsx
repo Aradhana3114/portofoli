@@ -20,7 +20,7 @@ export function Services() {
               initial={{ opacity: 0, y: 16 }}
               animate={isVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.45, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="grid gap-4 border-t border-border py-8 first:border-t-0 md:grid-cols-[1fr_1.5fr]"
+              className="grid gap-4 border-t border-border py-6 first:border-t-0 sm:py-8 md:grid-cols-[1fr_1.5fr]"
             >
               <h3 className="text-h3 font-display">{t(service.titleKey)}</h3>
               <div>

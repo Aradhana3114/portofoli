@@ -83,7 +83,7 @@ export function Contact() {
               <h3 className="mb-4 text-h3 font-display">{t("contact.directEmail")}</h3>
               <a
                 href={`mailto:${profile.email}`}
-                className="text-h3 font-medium text-foreground/80 transition-colors hover:text-accent-secondary"
+                className="text-h3 font-medium text-foreground/80 transition-colors hover:text-accent-secondary break-all"
               >
                 {profile.email}
               </a>

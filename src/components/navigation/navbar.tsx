@@ -73,7 +73,7 @@ export function Navbar() {
       <div className="container-editorial flex h-16 items-center justify-between">
         {/* Logo */}
         <Link href="#home" className="group flex items-center gap-3">
-          <div className="relative h-14 w-14">
+          <div className="relative h-10 w-10 sm:h-14 sm:w-14">
             <Image src={theme === "dark" ? "/images/putih.png" : "/images/hitam.png"} alt="Logo" fill className="object-contain" />
           </div>
         </Link>

@@ -19,7 +19,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-8 flex items-center justify-center gap-4"
+          className="mb-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
         >
           <div className="flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-caption">
             <span className="relative flex h-2 w-2">
@@ -41,10 +41,10 @@ export function Hero() {
           transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="mb-6"
         >
-          <h1 className="font-display text-[clamp(3rem,10vw,7rem)] font-bold leading-[0.9] tracking-tight">
+          <h1 className="font-display text-[clamp(2.25rem,10vw,7rem)] font-bold leading-[0.9] tracking-tight">
             {firstName}
           </h1>
-          <h1 className="font-display text-[clamp(3rem,10vw,7rem)] font-bold leading-[0.9] tracking-tight">
+          <h1 className="font-display text-[clamp(2.25rem,10vw,7rem)] font-bold leading-[0.9] tracking-tight">
             {lastName}
           </h1>
         </motion.div>

@@ -55,7 +55,7 @@ export function MobileMenu() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute left-0 right-0 top-full border-b border-border bg-background"
+            className="absolute left-0 right-0 top-full border-b border-border bg-background/95 backdrop-blur-md"
           >
             <ul className="container-editorial flex flex-col gap-1 py-4">
               {links.map((link) => (
