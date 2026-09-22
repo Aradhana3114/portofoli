@@ -7,6 +7,7 @@ import { techStack, skillCategories } from "@/data/skills";
 import { useLocale } from "next-intl";
 import { useIntersection } from "@/hooks/use-intersection";
 import { Download, GraduationCap } from "lucide-react";
+import Image from "next/image";
 
 export function About() {
   const t = useTranslations();
@@ -64,7 +65,9 @@ export function About() {
                 </div>
               </div>
               
-              <div className="aspect-square w-full rounded-lg bg-gradient-to-br from-blue-400 to-purple-500"></div>
+              <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-gradient-to-br from-blue-400 to-purple-500">
+                <Image src="/images/me/me.png" alt={profile.name} fill className="object-cover" priority />
+              </div>
             </div>
           </motion.div>
 
