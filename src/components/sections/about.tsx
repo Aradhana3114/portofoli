@@ -65,8 +65,19 @@ export function About() {
                 </div>
               </div>
               
-              <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-gradient-to-br from-blue-400 to-purple-500">
-                <Image src="/images/me/me.png" alt={profile.name} fill className="object-cover" priority />
+              <div
+                className="relative aspect-square w-full select-none overflow-hidden rounded-lg bg-black"
+                onContextMenu={(e) => e.preventDefault()}
+              >
+                <Image
+                  src="/images/me/me.png"
+                  alt={profile.name}
+                  fill
+                  className="object-cover"
+                  priority
+                  draggable={false}
+                />
+                <div className="absolute inset-0" aria-hidden />
               </div>
             </div>
           </motion.div>
