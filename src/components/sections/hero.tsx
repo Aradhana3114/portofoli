@@ -13,13 +13,13 @@ export function Hero() {
 
   return (
     <section id="home" className="relative flex min-h-screen items-center justify-center overflow-hidden pt-16">
-      <div className="container-editorial relative z-10 py-20 text-center">
+      <div className="container-editorial relative z-10 py-8 text-center">
         {/* Status Badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
+          className="mb-6 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
         >
           <div className="flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-caption">
             <span className="relative flex h-2 w-2">
@@ -41,10 +41,10 @@ export function Hero() {
           transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="mb-6"
         >
-          <h1 className="font-display text-[clamp(2.25rem,10vw,7rem)] font-bold leading-[0.9] tracking-tight">
+          <h1 className="font-display text-[clamp(2rem,8vw,6rem)] font-bold leading-[0.9] tracking-tight">
             {firstName}
           </h1>
-          <h1 className="font-display text-[clamp(2.25rem,10vw,7rem)] font-bold leading-[0.9] tracking-tight">
+          <h1 className="font-display text-[clamp(2rem,8vw,6rem)] font-bold leading-[0.9] tracking-tight">
             {lastName}
           </h1>
         </motion.div>
@@ -54,7 +54,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-8 flex flex-wrap items-center justify-center gap-3 text-body"
+          className="mb-6 flex flex-wrap items-center justify-center gap-3 text-body"
         >
           <span className="rounded-full border border-border bg-foreground px-4 py-1.5 font-medium text-background">
             {t("hero.student")}
@@ -72,7 +72,7 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-16"
+          className="mt-8"
         >
           <p className="mb-3 text-caption uppercase tracking-wider text-foreground/60">{t("hero.scrollDown")}</p>
           <motion.a
