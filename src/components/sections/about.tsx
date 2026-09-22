@@ -7,7 +7,6 @@ import { techStack, skillCategories } from "@/data/skills";
 import { useLocale } from "next-intl";
 import { useIntersection } from "@/hooks/use-intersection";
 import { Download, GraduationCap } from "lucide-react";
-import Image from "next/image";
 
 export function About() {
   const t = useTranslations();
@@ -65,20 +64,7 @@ export function About() {
                 </div>
               </div>
               
-              <div
-                className="relative aspect-square w-full select-none overflow-hidden rounded-lg bg-black"
-                onContextMenu={(e) => e.preventDefault()}
-              >
-                <Image
-                  src="/images/me/me.png"
-                  alt={profile.name}
-                  fill
-                  className="object-cover"
-                  priority
-                  draggable={false}
-                />
-                <div className="absolute inset-0" aria-hidden />
-              </div>
+              <div className="aspect-square w-full rounded-lg bg-black"></div>
             </div>
           </motion.div>
 
