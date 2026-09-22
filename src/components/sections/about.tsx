@@ -113,15 +113,6 @@ export function About() {
                 </div>
               </div>
 
-              <div className="border-t border-border pt-4">
-                <div className="flex items-end justify-between">
-                  <div>
-                    <p className="text-display-sm font-display font-bold">3.8</p>
-                    <p className="text-caption text-foreground/60">{t("about.gpa")}</p>
-                  </div>
-                  <p className="text-caption font-medium">{t("about.highlySatisfactory")}</p>
-                </div>
-              </div>
             </div>
 
             {/* Tech Stack */}
