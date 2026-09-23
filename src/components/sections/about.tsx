@@ -7,6 +7,7 @@ import { techStack, skillCategories } from "@/data/skills";
 import { useLocale } from "next-intl";
 import { useIntersection } from "@/hooks/use-intersection";
 import { Download, GraduationCap } from "lucide-react";
+import { FluidReveal } from "@/components/ui/fluid-reveal";
 
 export function About() {
   const t = useTranslations();
@@ -46,8 +47,8 @@ export function About() {
             <h3 className="text-h2 font-display">{t("about.greeting")}{profile.name.split(" ")[0]}.</h3>
             <p className="text-body leading-relaxed text-foreground/80">{t("profile.bio")}</p>
 
-            {/* Avatar Card */}
-            <div className="mt-8 overflow-hidden rounded-2xl border-2 border-foreground bg-muted p-6">
+            {/* Avatar */}
+            <div className="mt-8">
               <div className="mb-4 flex items-start justify-between">
                 <div>
                   <h4 className="font-display text-h3">@{profile.name.split(" ")[0].toLowerCase()}</h4>
@@ -63,8 +64,19 @@ export function About() {
                   {t("about.hireMe")}
                 </div>
               </div>
-              
-              <div className="aspect-square w-full rounded-lg bg-black"></div>
+
+              <FluidReveal
+                baseSrc="/images/me/me.png"
+                revealSrc="/images/me/spiderman.png"
+                hint={t("about.revealHint")}
+                baseFocus={{ x: 0.478, y: 0.727 }}
+                baseZoom={1.55}
+                revealFocus={{ x: 0.493, y: 0.794 }}
+                revealZoom={1.9}
+                fadeOnLeave
+                idleAnimation
+                edgeGlow
+              />
             </div>
           </motion.div>
 

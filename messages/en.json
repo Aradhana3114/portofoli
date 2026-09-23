@@ -38,7 +38,8 @@
     "gpa": "GPA / 4.00",
     "highlySatisfactory": "Highly Satisfactory",
     "techStack": "Tech Stack",
-    "myFocus": "My Focus"
+    "myFocus": "My Focus",
+    "revealHint": "Move cursor to reveal"
   },
   "works": {
     "title1": "Selected",

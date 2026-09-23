@@ -38,7 +38,8 @@
     "gpa": "GPA / 4.00",
     "highlySatisfactory": "Sangat Memuaskan",
     "techStack": "Tech Stack",
-    "myFocus": "Fokus Saya"
+    "myFocus": "Fokus Saya",
+    "revealHint": "Gerakkan kursor untuk reveal"
   },
   "works": {
     "title1": "Selected",
