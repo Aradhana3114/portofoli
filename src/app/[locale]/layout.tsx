@@ -21,7 +21,10 @@ const bodyFont = Inter({
 
 export const metadata: Metadata = {
   icons: {
-    icon: "/favicon.svg",
+    icon: [
+      { url: "/images/hitam.png", type: "image/png" },
+      { url: "/images/putih.png", type: "image/png", media: "(prefers-color-scheme: dark)" },
+    ],
     apple: "/images/putih.png",
   },
 };

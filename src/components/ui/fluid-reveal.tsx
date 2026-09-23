@@ -48,6 +48,7 @@ uniform float uAspect;
 uniform vec2 uPoint;
 uniform vec3 uColor;
 uniform float uRadius;
+uniform float uByte;
 in vec2 vUv;
 out vec4 fragColor;
 void main() {
@@ -56,7 +57,10 @@ void main() {
   float d = 1.0 - min(length(p) / max(uRadius, 1e-5), 1.0);
   d = d * d;
   vec3 base = texture(uTarget, vUv).xyz;
-  fragColor = vec4(base + uColor * d, 1.0);
+  if (uByte > 0.5) base = base * 2.0 - 1.0;
+  vec3 result = base + uColor * d;
+  if (uByte > 0.5) result = clamp(result * 0.5 + 0.5, 0.0, 1.0);
+  fragColor = vec4(result, 1.0);
 }`;
 
 const FRAG_ADVECT = `#version 300 es
@@ -65,10 +69,12 @@ uniform sampler2D uVelocity;
 uniform sampler2D uSource;
 uniform float uDt;
 uniform float uDissipation;
+uniform float uByte;
 in vec2 vUv;
 out vec4 fragColor;
 void main() {
   vec2 vel = texture(uVelocity, vUv).xy;
+  if (uByte > 0.5) vel = vel * 2.0 - 1.0;
   vec2 coord = vUv - vel * uDt;
   vec4 result = texture(uSource, coord);
   fragColor = result * uDissipation;
@@ -78,14 +84,23 @@ const FRAG_DIV = `#version 300 es
 precision highp float;
 uniform sampler2D uVelocity;
 uniform vec2 uTexel;
+uniform float uByte;
 in vec2 vUv;
 out vec4 fragColor;
 void main() {
-  float L = texture(uVelocity, vUv - vec2(uTexel.x, 0.0)).x;
-  float R = texture(uVelocity, vUv + vec2(uTexel.x, 0.0)).x;
-  float B = texture(uVelocity, vUv - vec2(0.0, uTexel.y)).y;
-  float T = texture(uVelocity, vUv + vec2(0.0, uTexel.y)).y;
-  fragColor = vec4(0.5 * (R - L + T - B), 0.0, 0.0, 1.0);
+  vec2 t = texture(uVelocity, vUv - vec2(uTexel.x, 0.0)).xy;
+  vec2 r = texture(uVelocity, vUv + vec2(uTexel.x, 0.0)).xy;
+  vec2 b = texture(uVelocity, vUv - vec2(0.0, uTexel.y)).xy;
+  vec2 u = texture(uVelocity, vUv + vec2(0.0, uTexel.y)).xy;
+  if (uByte > 0.5) {
+    t = t * 2.0 - 1.0;
+    r = r * 2.0 - 1.0;
+    b = b * 2.0 - 1.0;
+    u = u * 2.0 - 1.0;
+  }
+  float div = 0.5 * (r.x - t.x + u.y - b.y);
+  if (uByte > 0.5) div = clamp(div * 0.5 + 0.5, 0.0, 1.0);
+  fragColor = vec4(div, 0.0, 0.0, 1.0);
 }`;
 
 const FRAG_PRESSURE = `#version 300 es
@@ -93,6 +108,7 @@ precision highp float;
 uniform sampler2D uPressure;
 uniform sampler2D uDivergence;
 uniform vec2 uTexel;
+uniform float uByte;
 in vec2 vUv;
 out vec4 fragColor;
 void main() {
@@ -101,7 +117,16 @@ void main() {
   float B = texture(uPressure, vUv - vec2(0.0, uTexel.y)).x;
   float T = texture(uPressure, vUv + vec2(0.0, uTexel.y)).x;
   float div = texture(uDivergence, vUv).x;
-  fragColor = vec4((L + R + B + T - div) * 0.25, 0.0, 0.0, 1.0);
+  if (uByte > 0.5) {
+    L = L * 2.0 - 1.0;
+    R = R * 2.0 - 1.0;
+    B = B * 2.0 - 1.0;
+    T = T * 2.0 - 1.0;
+    div = div * 2.0 - 1.0;
+  }
+  float p = (L + R + B + T - div) * 0.25;
+  if (uByte > 0.5) p = clamp(p * 0.5 + 0.5, 0.0, 1.0);
+  fragColor = vec4(p, 0.0, 0.0, 1.0);
 }`;
 
 const FRAG_GRADIENT = `#version 300 es
@@ -109,6 +134,7 @@ precision highp float;
 uniform sampler2D uPressure;
 uniform sampler2D uVelocity;
 uniform vec2 uTexel;
+uniform float uByte;
 in vec2 vUv;
 out vec4 fragColor;
 void main() {
@@ -117,7 +143,15 @@ void main() {
   float B = texture(uPressure, vUv - vec2(0.0, uTexel.y)).x;
   float T = texture(uPressure, vUv + vec2(0.0, uTexel.y)).x;
   vec2 v = texture(uVelocity, vUv).xy;
+  if (uByte > 0.5) {
+    L = L * 2.0 - 1.0;
+    R = R * 2.0 - 1.0;
+    B = B * 2.0 - 1.0;
+    T = T * 2.0 - 1.0;
+    v = v * 2.0 - 1.0;
+  }
   v -= vec2(R - L, T - B);
+  if (uByte > 0.5) v = clamp(v * 0.5 + 0.5, 0.0, 1.0);
   fragColor = vec4(v, 0.0, 1.0);
 }`;
 
@@ -125,10 +159,13 @@ const FRAG_CLEAR = `#version 300 es
 precision highp float;
 uniform sampler2D uTexture;
 uniform float uValue;
+uniform float uByte;
 in vec2 vUv;
 out vec4 fragColor;
 void main() {
-  fragColor = uValue * texture(uTexture, vUv);
+  vec4 t = texture(uTexture, vUv);
+  if (uByte > 0.5) fragColor = uValue * t + (1.0 - uValue) * 0.5;
+  else fragColor = uValue * t;
 }`;
 
 const FRAG_DISPLAY = `#version 300 es
@@ -143,6 +180,7 @@ uniform vec2 uScaleBase;
 uniform vec2 uScaleReveal;
 uniform vec2 uFocusBase;
 uniform vec2 uFocusReveal;
+uniform float uByte;
 in vec2 vUv;
 out vec4 fragColor;
 
@@ -169,7 +207,9 @@ void main() {
   rblur *= 0.25;
   rev.rgb = clamp(rev.rgb + (rev.rgb - rblur.rgb) * 0.55, 0.0, 1.0);
 
-  float velLen = length(texture(uVelocity, vUv).xy);
+  vec2 vel = texture(uVelocity, vUv).xy;
+  if (uByte > 0.5) vel = vel * 2.0 - 1.0;
+  float velLen = length(vel);
   float dye = texture(uDye, vUv).r;
   float signal = max(dye * 1.4, velLen * 2.5);
   float m = smoothstep(uThreshold, uThreshold + 0.1, signal);
@@ -239,6 +279,25 @@ function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 
+function canRenderTo(gl: WebGL2RenderingContext, internal: number, type: number): boolean {
+  const tex = gl.createTexture();
+  if (!tex) return false;
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, internal, 4, 4, 0, gl.RGBA, type, null);
+  const fbo = gl.createFramebuffer();
+  if (!fbo) {
+    gl.deleteTexture(tex);
+    return false;
+  }
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+  const ok = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE;
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.deleteFramebuffer(fbo);
+  gl.deleteTexture(tex);
+  return ok;
+}
+
 const PARAMS = {
   cursorSize: 0.14,
   mouseForce: 48,
@@ -291,14 +350,21 @@ export function FluidReveal({
     const extHBF = gl.getExtension("EXT_color_buffer_half_float");
     gl.getExtension("OES_texture_float_linear");
     gl.getExtension("OES_texture_half_float_linear");
+    void extCBF;
+    void extHBF;
 
     let texType: number = gl.FLOAT;
     let texInternal: number = gl.RGBA32F;
-    if (!extCBF) {
-      if (!extHBF) return;
-      texType = gl.HALF_FLOAT;
-      texInternal = gl.RGBA16F;
+    if (!canRenderTo(gl, gl.RGBA32F, gl.FLOAT)) {
+      if (canRenderTo(gl, gl.RGBA16F, gl.HALF_FLOAT)) {
+        texType = gl.HALF_FLOAT;
+        texInternal = gl.RGBA16F;
+      } else {
+        texType = gl.UNSIGNED_BYTE;
+        texInternal = gl.RGBA8;
+      }
     }
+    const byteFlag = texInternal === gl.RGBA8 ? 1 : 0;
 
     let progSplat: ReturnType<typeof createProgram>;
     let progAdvect: ReturnType<typeof createProgram>;
@@ -442,6 +508,23 @@ export function FluidReveal({
       pressure = createDoubleFBO(simW, simH);
       dye = createDoubleFBO(simW, simH);
       divergence = createFBO(simW, simH);
+      if (byteFlag) {
+        for (const pair of [velocity, pressure]) {
+          for (const side of [pair.read, pair.write]) {
+            gl!.bindFramebuffer(gl!.FRAMEBUFFER, side.fbo);
+            gl!.viewport(0, 0, side.w, side.h);
+            gl!.clearColor(0.5, 0.5, 0.5, 1);
+            gl!.clear(gl!.COLOR_BUFFER_BIT);
+          }
+        }
+        for (const side of [divergence]) {
+          gl!.bindFramebuffer(gl!.FRAMEBUFFER, side.fbo);
+          gl!.viewport(0, 0, side.w, side.h);
+          gl!.clearColor(0.5, 0, 0, 1);
+          gl!.clear(gl!.COLOR_BUFFER_BIT);
+        }
+        gl!.bindFramebuffer(gl!.FRAMEBUFFER, null);
+      }
     }
 
     function bindTex(unit: number, tex: WebGLTexture) {
@@ -470,6 +553,8 @@ export function FluidReveal({
     let prevIdleX = 0.5;
     let prevIdleY = 0.5;
     let clearBoost = 0;
+    let leaveTimer = 0;
+    let e0Type = "";
     let raf = 0;
     let last = performance.now();
 
@@ -488,11 +573,13 @@ export function FluidReveal({
         gl!.uniform2f(progSplat.u.uPoint!, s.x, s.y);
         gl!.uniform3f(progSplat.u.uColor!, s.dx, s.dy, 0);
         gl!.uniform1f(progSplat.u.uRadius!, PARAMS.cursorSize);
+        if (progSplat.u.uByte) gl!.uniform1f(progSplat.u.uByte!, byteFlag);
         blit(velocity.write);
         velocity.swap();
 
         gl!.uniform1i(progSplat.u.uTarget!, bindTex(0, dye.read.tex));
         gl!.uniform3f(progSplat.u.uColor!, 1, 1, 1);
+        if (progSplat.u.uByte) gl!.uniform1f(progSplat.u.uByte!, 0);
         blit(dye.write);
         dye.swap();
       }
@@ -513,7 +600,9 @@ export function FluidReveal({
       ];
       for (const t of targets) {
         gl!.uniform1i(progClear.u.uTexture!, bindTex(0, t.tex));
+        const isDye = dye && (t === dye.read || t === dye.write);
         gl!.uniform1f(progClear.u.uValue!, 0);
+        if (progClear.u.uByte) gl!.uniform1f(progClear.u.uByte!, isDye ? 0 : byteFlag);
         blit(t);
       }
     }
@@ -532,6 +621,7 @@ export function FluidReveal({
       }
 
       gl!.useProgram(progAdvect.p);
+      if (progAdvect.u.uByte) gl!.uniform1f(progAdvect.u.uByte!, byteFlag);
       gl!.uniform1i(progAdvect.u.uVelocity!, bindTex(0, velocity.read.tex));
       gl!.uniform1i(progAdvect.u.uSource!, bindTex(1, velocity.read.tex));
       gl!.uniform1f(progAdvect.u.uDt!, dt * 60 * 0.15);
@@ -546,6 +636,7 @@ export function FluidReveal({
       dye.swap();
 
       gl!.useProgram(progDiv.p);
+      if (progDiv.u.uByte) gl!.uniform1f(progDiv.u.uByte!, byteFlag);
       gl!.uniform1i(progDiv.u.uVelocity!, bindTex(0, velocity.read.tex));
       gl!.uniform2f(progDiv.u.uTexel!, texel[0], texel[1]);
       blit(divergence);
@@ -553,10 +644,12 @@ export function FluidReveal({
       gl!.useProgram(progClear.p);
       gl!.uniform1i(progClear.u.uTexture!, bindTex(0, pressure.read.tex));
       gl!.uniform1f(progClear.u.uValue!, 0.8);
+      if (progClear.u.uByte) gl!.uniform1f(progClear.u.uByte!, byteFlag);
       blit(pressure.write);
       pressure.swap();
 
       gl!.useProgram(progPressure.p);
+      if (progPressure.u.uByte) gl!.uniform1f(progPressure.u.uByte!, byteFlag);
       gl!.uniform2f(progPressure.u.uTexel!, texel[0], texel[1]);
       gl!.uniform1i(progPressure.u.uDivergence!, bindTex(1, divergence.tex));
       for (let i = 0; i < PARAMS.iters; i++) {
@@ -566,6 +659,7 @@ export function FluidReveal({
       }
 
       gl!.useProgram(progGradient.p);
+      if (progGradient.u.uByte) gl!.uniform1f(progGradient.u.uByte!, byteFlag);
       gl!.uniform1i(progGradient.u.uPressure!, bindTex(0, pressure.read.tex));
       gl!.uniform1i(progGradient.u.uVelocity!, bindTex(1, velocity.read.tex));
       gl!.uniform2f(progGradient.u.uTexel!, texel[0], texel[1]);
@@ -599,6 +693,7 @@ export function FluidReveal({
       gl!.uniform2f(progDisplay.u.uScaleReveal!, sr[0], sr[1]);
       if (progDisplay.u.uFocusBase) gl!.uniform2f(progDisplay.u.uFocusBase, cfg.baseFocus.x, cfg.baseFocus.y);
       if (progDisplay.u.uFocusReveal) gl!.uniform2f(progDisplay.u.uFocusReveal, cfg.revealFocus.x, cfg.revealFocus.y);
+      if (progDisplay.u.uByte) gl!.uniform1f(progDisplay.u.uByte!, byteFlag);
       blit(null);
     }
 
@@ -626,10 +721,12 @@ export function FluidReveal({
 
     function onPointerDown(e: PointerEvent) {
       const { px, py } = clientToUv(e.clientX, e.clientY);
+      e0Type = e.pointerType || "";
       lastX = px;
       lastY = py;
       inside = true;
       clearBoost = 0;
+      window.clearTimeout(leaveTimer);
       lastMove = performance.now();
       queueSplat(px, py, 0, 0);
       try {
@@ -642,6 +739,7 @@ export function FluidReveal({
     function onPointerEnter(e: PointerEvent) {
       inside = true;
       clearBoost = 0;
+      window.clearTimeout(leaveTimer);
       lastMove = performance.now();
       const { px, py } = clientToUv(e.clientX, e.clientY);
       lastX = px;
@@ -650,11 +748,22 @@ export function FluidReveal({
 
     function onPointerLeave() {
       inside = false;
-      if (propsRef.current.fadeOnLeave) clearBoost = 1;
+      window.clearTimeout(leaveTimer);
+      if (propsRef.current.fadeOnLeave) {
+        leaveTimer = window.setTimeout(() => {
+          if (!inside) clearBoost = 1;
+        }, 700);
+      }
     }
 
     function onPointerUp() {
       lastMove = performance.now();
+      if (e0Type === "touch" || e0Type === "pen") {
+        window.clearTimeout(leaveTimer);
+        leaveTimer = window.setTimeout(() => {
+          if (!inside) clearBoost = 1;
+        }, 700);
+      }
     }
 
     function onTouchMove(e: TouchEvent) {
@@ -665,6 +774,28 @@ export function FluidReveal({
         clientY: t.clientY,
       } as PointerEvent);
       e.preventDefault();
+    }
+
+    function onTouchStart(e: TouchEvent) {
+      const t = e.touches[0];
+      if (!t) return;
+      const { px, py } = clientToUv(t.clientX, t.clientY);
+      lastX = px;
+      lastY = py;
+      inside = true;
+      clearBoost = 0;
+      window.clearTimeout(leaveTimer);
+      lastMove = performance.now();
+      queueSplat(px, py, 0, 0);
+      e.preventDefault();
+    }
+
+    function onTouchEnd() {
+      lastMove = performance.now();
+      window.clearTimeout(leaveTimer);
+      leaveTimer = window.setTimeout(() => {
+        if (!inside) clearBoost = 1;
+      }, 700);
     }
 
     function onResize() {
@@ -713,7 +844,10 @@ export function FluidReveal({
     canvas.addEventListener("pointerleave", onPointerLeave);
     canvas.addEventListener("pointerup", onPointerUp);
     canvas.addEventListener("pointercancel", onPointerLeave);
+    canvas.addEventListener("touchstart", onTouchStart, { passive: false });
     canvas.addEventListener("touchmove", onTouchMove, { passive: false });
+    canvas.addEventListener("touchend", onTouchEnd);
+    canvas.addEventListener("touchcancel", onTouchEnd);
     window.addEventListener("blur", onPointerLeave);
 
     initSim();
@@ -735,13 +869,17 @@ export function FluidReveal({
     return () => {
       disposed = true;
       cancelAnimationFrame(raf);
+      window.clearTimeout(leaveTimer);
       canvas.removeEventListener("pointerdown", onPointerDown);
       canvas.removeEventListener("pointermove", setPointer);
       canvas.removeEventListener("pointerenter", onPointerEnter);
       canvas.removeEventListener("pointerleave", onPointerLeave);
       canvas.removeEventListener("pointerup", onPointerUp);
       canvas.removeEventListener("pointercancel", onPointerLeave);
+      canvas.removeEventListener("touchstart", onTouchStart);
       canvas.removeEventListener("touchmove", onTouchMove);
+      canvas.removeEventListener("touchend", onTouchEnd);
+      canvas.removeEventListener("touchcancel", onTouchEnd);
       window.removeEventListener("blur", onPointerLeave);
 
       for (const t of createdTextures) gl.deleteTexture(t);
