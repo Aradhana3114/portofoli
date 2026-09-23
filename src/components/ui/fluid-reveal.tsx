@@ -602,15 +602,21 @@ export function FluidReveal({
       blit(null);
     }
 
-    function setPointer(e: PointerEvent) {
+    function clientToUv(clientX: number, clientY: number) {
       const rect = canvas!.getBoundingClientRect();
-      const px = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
-      const py = Math.min(1, Math.max(0, 1 - (e.clientY - rect.top) / rect.height));
+      const px = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+      const py = Math.min(1, Math.max(0, 1 - (clientY - rect.top) / rect.height));
+      return { px, py };
+    }
+
+    function setPointer(e: PointerEvent) {
+      const { px, py } = clientToUv(e.clientX, e.clientY);
       const dx = px - lastX;
       const dy = py - lastY;
       lastX = px;
       lastY = py;
       inside = true;
+      clearBoost = 0;
       lastMove = performance.now();
       if (Math.abs(dx) > 0.0005 || Math.abs(dy) > 0.0005) {
         const f = PARAMS.mouseForce / 1000;
@@ -618,10 +624,28 @@ export function FluidReveal({
       }
     }
 
+    function onPointerDown(e: PointerEvent) {
+      const { px, py } = clientToUv(e.clientX, e.clientY);
+      lastX = px;
+      lastY = py;
+      inside = true;
+      clearBoost = 0;
+      lastMove = performance.now();
+      queueSplat(px, py, 0, 0);
+      try {
+        canvas!.setPointerCapture(e.pointerId);
+      } catch {
+        /* ignore */
+      }
+    }
+
     function onPointerEnter(e: PointerEvent) {
       inside = true;
+      clearBoost = 0;
       lastMove = performance.now();
-      setPointer(e);
+      const { px, py } = clientToUv(e.clientX, e.clientY);
+      lastX = px;
+      lastY = py;
     }
 
     function onPointerLeave() {
@@ -629,16 +653,18 @@ export function FluidReveal({
       if (propsRef.current.fadeOnLeave) clearBoost = 1;
     }
 
-    function onTouchMove(e: TouchEvent) {
-      if (e.touches[0]) {
-        setPointer(e.touches[0] as unknown as PointerEvent);
-        e.preventDefault();
-      }
+    function onPointerUp() {
+      lastMove = performance.now();
     }
 
-    function onTouchEnd() {
-      inside = false;
-      if (propsRef.current.fadeOnLeave) clearBoost = 1;
+    function onTouchMove(e: TouchEvent) {
+      const t = e.touches[0];
+      if (!t) return;
+      setPointer({
+        clientX: t.clientX,
+        clientY: t.clientY,
+      } as PointerEvent);
+      e.preventDefault();
     }
 
     function onResize() {
@@ -681,11 +707,13 @@ export function FluidReveal({
       raf = requestAnimationFrame(frame);
     }
 
+    canvas.addEventListener("pointerdown", onPointerDown);
     canvas.addEventListener("pointermove", setPointer);
     canvas.addEventListener("pointerenter", onPointerEnter);
     canvas.addEventListener("pointerleave", onPointerLeave);
+    canvas.addEventListener("pointerup", onPointerUp);
+    canvas.addEventListener("pointercancel", onPointerLeave);
     canvas.addEventListener("touchmove", onTouchMove, { passive: false });
-    canvas.addEventListener("touchend", onTouchEnd);
     window.addEventListener("blur", onPointerLeave);
 
     initSim();
@@ -707,11 +735,13 @@ export function FluidReveal({
     return () => {
       disposed = true;
       cancelAnimationFrame(raf);
+      canvas.removeEventListener("pointerdown", onPointerDown);
       canvas.removeEventListener("pointermove", setPointer);
       canvas.removeEventListener("pointerenter", onPointerEnter);
       canvas.removeEventListener("pointerleave", onPointerLeave);
+      canvas.removeEventListener("pointerup", onPointerUp);
+      canvas.removeEventListener("pointercancel", onPointerLeave);
       canvas.removeEventListener("touchmove", onTouchMove);
-      canvas.removeEventListener("touchend", onTouchEnd);
       window.removeEventListener("blur", onPointerLeave);
 
       for (const t of createdTextures) gl.deleteTexture(t);
@@ -727,7 +757,7 @@ export function FluidReveal({
   return (
     <div
       ref={containerRef}
-      className={`relative aspect-square w-full overflow-hidden rounded-lg bg-black ${className}`}
+      className={`relative aspect-square w-full touch-none overflow-hidden rounded-lg bg-black select-none ${className}`}
       style={{ cursor: "none" }}
     >
       {!glReady ? (
@@ -741,7 +771,8 @@ export function FluidReveal({
       ) : null}
       <canvas
         ref={canvasRef}
-        className={`absolute inset-0 h-full w-full ${glReady ? "opacity-100" : "opacity-0"}`}
+        className={`absolute inset-0 h-full w-full touch-none ${glReady ? "opacity-100" : "opacity-0"}`}
+        style={{ touchAction: "none" }}
       />
       {hint ? (
         <div className="pointer-events-none absolute bottom-2 left-0 right-0 text-center text-[10px] tracking-wide text-white/45 select-none">
