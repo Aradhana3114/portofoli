@@ -342,9 +342,16 @@ export function FluidReveal({
       depth: false,
       stencil: false,
       preserveDrawingBuffer: false,
+      failIfMajorPerformanceCaveat: false,
     });
-    if (!gl) return;
-    if (gl.isContextLost()) return;
+    if (!gl) {
+      console.error("FluidReveal: WebGL2 unavailable");
+      return;
+    }
+    if (gl.isContextLost()) {
+      console.error("FluidReveal: context lost at init");
+      return;
+    }
 
     const extCBF = gl.getExtension("EXT_color_buffer_float");
     const extHBF = gl.getExtension("EXT_color_buffer_half_float");
@@ -382,7 +389,7 @@ export function FluidReveal({
       progClear = createProgram(gl, FRAG_CLEAR);
       progDisplay = createProgram(gl, FRAG_DISPLAY);
     } catch (e) {
-      console.error(e);
+      console.error("FluidReveal: shader/program init failed", e);
       return;
     }
 
@@ -394,12 +401,13 @@ export function FluidReveal({
     gl.enableVertexAttribArray(0);
     gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
 
-    const createdTextures: WebGLTexture[] = [];
-    const createdFbos: WebGLFramebuffer[] = [];
+    const imageTextures: WebGLTexture[] = [];
+    const simTextures: WebGLTexture[] = [];
+    const simFbos: WebGLFramebuffer[] = [];
 
     function createFBO(w: number, h: number) {
       const tex = gl!.createTexture()!;
-      createdTextures.push(tex);
+      simTextures.push(tex);
       gl!.bindTexture(gl!.TEXTURE_2D, tex);
       gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_MIN_FILTER, gl!.LINEAR);
       gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_MAG_FILTER, gl!.LINEAR);
@@ -407,7 +415,7 @@ export function FluidReveal({
       gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_WRAP_T, gl!.CLAMP_TO_EDGE);
       gl!.texImage2D(gl!.TEXTURE_2D, 0, texInternal, w, h, 0, gl!.RGBA, texType, null);
       const fbo = gl!.createFramebuffer()!;
-      createdFbos.push(fbo);
+      simFbos.push(fbo);
       gl!.bindFramebuffer(gl!.FRAMEBUFFER, fbo);
       gl!.framebufferTexture2D(gl!.FRAMEBUFFER, gl!.COLOR_ATTACHMENT0, gl!.TEXTURE_2D, tex, 0);
       gl!.viewport(0, 0, w, h);
@@ -439,7 +447,7 @@ export function FluidReveal({
 
     function createImageTex() {
       const tex = gl!.createTexture()!;
-      createdTextures.push(tex);
+      imageTextures.push(tex);
       gl!.bindTexture(gl!.TEXTURE_2D, tex);
       gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_MIN_FILTER, gl!.LINEAR);
       gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_MAG_FILTER, gl!.LINEAR);
@@ -493,21 +501,40 @@ export function FluidReveal({
     let simW = 0;
     let simH = 0;
 
+    function disposeSim() {
+      for (const t of simTextures) gl!.deleteTexture(t);
+      for (const f of simFbos) gl!.deleteFramebuffer(f);
+      simTextures.length = 0;
+      simFbos.length = 0;
+      velocity = null;
+      pressure = null;
+      dye = null;
+      divergence = null;
+    }
+
     function initSim() {
       const rect = container!.getBoundingClientRect();
+      if (rect.width < 4 || rect.height < 4) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       const w = Math.max(2, Math.floor(rect.width * dpr));
       const h = Math.max(2, Math.floor(rect.height * dpr));
+      const nextSimW = Math.max(32, Math.round(rect.width * PARAMS.resolution));
+      const nextSimH = Math.max(32, Math.round(rect.height * PARAMS.resolution));
+      if (velocity && canvas!.width === w && canvas!.height === h && simW === nextSimW && simH === nextSimH) {
+        return;
+      }
+
+      disposeSim();
       canvas!.width = w;
       canvas!.height = h;
-
-      simW = Math.max(32, Math.round(rect.width * PARAMS.resolution));
-      simH = Math.max(32, Math.round(rect.height * PARAMS.resolution));
+      simW = nextSimW;
+      simH = nextSimH;
 
       velocity = createDoubleFBO(simW, simH);
       pressure = createDoubleFBO(simW, simH);
       dye = createDoubleFBO(simW, simH);
       divergence = createFBO(simW, simH);
+      splats.length = 0;
       if (byteFlag) {
         for (const pair of [velocity, pressure]) {
           for (const side of [pair.read, pair.write]) {
@@ -517,12 +544,10 @@ export function FluidReveal({
             gl!.clear(gl!.COLOR_BUFFER_BIT);
           }
         }
-        for (const side of [divergence]) {
-          gl!.bindFramebuffer(gl!.FRAMEBUFFER, side.fbo);
-          gl!.viewport(0, 0, side.w, side.h);
-          gl!.clearColor(0.5, 0, 0, 1);
-          gl!.clear(gl!.COLOR_BUFFER_BIT);
-        }
+        gl!.bindFramebuffer(gl!.FRAMEBUFFER, divergence.fbo);
+        gl!.viewport(0, 0, divergence.w, divergence.h);
+        gl!.clearColor(0.5, 0, 0, 1);
+        gl!.clear(gl!.COLOR_BUFFER_BIT);
         gl!.bindFramebuffer(gl!.FRAMEBUFFER, null);
       }
     }
@@ -729,8 +754,9 @@ export function FluidReveal({
       window.clearTimeout(leaveTimer);
       lastMove = performance.now();
       queueSplat(px, py, 0, 0);
+      queueSplat(px, py, 0.002, 0.002);
       try {
-        canvas!.setPointerCapture(e.pointerId);
+        container!.setPointerCapture(e.pointerId);
       } catch {
         /* ignore */
       }
@@ -748,21 +774,30 @@ export function FluidReveal({
 
     function onPointerLeave() {
       inside = false;
-      window.clearTimeout(leaveTimer);
-      if (propsRef.current.fadeOnLeave) {
+      if (e0Type === "mouse") {
+        scheduleFade();
+      } else {
+        window.clearTimeout(leaveTimer);
         leaveTimer = window.setTimeout(() => {
           if (!inside) clearBoost = 1;
         }, 700);
       }
     }
 
+    function scheduleFade() {
+      lastMove = performance.now();
+      window.clearTimeout(leaveTimer);
+      if (!propsRef.current.fadeOnLeave) return;
+      leaveTimer = window.setTimeout(() => {
+        if (!inside) clearBoost = 1;
+      }, 700);
+    }
+
     function onPointerUp() {
       lastMove = performance.now();
       if (e0Type === "touch" || e0Type === "pen") {
-        window.clearTimeout(leaveTimer);
-        leaveTimer = window.setTimeout(() => {
-          if (!inside) clearBoost = 1;
-        }, 700);
+        inside = false;
+        scheduleFade();
       }
     }
 
@@ -780,6 +815,7 @@ export function FluidReveal({
       const t = e.touches[0];
       if (!t) return;
       const { px, py } = clientToUv(t.clientX, t.clientY);
+      e0Type = "touch";
       lastX = px;
       lastY = py;
       inside = true;
@@ -787,28 +823,18 @@ export function FluidReveal({
       window.clearTimeout(leaveTimer);
       lastMove = performance.now();
       queueSplat(px, py, 0, 0);
+      queueSplat(px, py, 0.002, 0.002);
       e.preventDefault();
     }
 
     function onTouchEnd() {
-      lastMove = performance.now();
-      window.clearTimeout(leaveTimer);
-      leaveTimer = window.setTimeout(() => {
-        if (!inside) clearBoost = 1;
-      }, 700);
+      inside = false;
+      scheduleFade();
     }
 
     function onResize() {
       if (disposed) return;
-      const rect = container!.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      const w = Math.max(2, Math.floor(rect.width * dpr));
-      const h = Math.max(2, Math.floor(rect.height * dpr));
-      const nextSimW = Math.max(32, Math.round(rect.width * PARAMS.resolution));
-      const nextSimH = Math.max(32, Math.round(rect.height * PARAMS.resolution));
-      if (nextSimW !== simW || nextSimH !== simH || canvas!.width !== w || canvas!.height !== h) {
-        initSim();
-      }
+      initSim();
     }
 
     function idleSplats(dt: number) {
@@ -831,24 +857,34 @@ export function FluidReveal({
       if (disposed) return;
       const dt = Math.min((now - last) / 1000, 0.033);
       last = now;
-      onResize();
       idleSplats(dt);
       stepFluid(PARAMS.dt);
       render();
       raf = requestAnimationFrame(frame);
     }
 
-    canvas.addEventListener("pointerdown", onPointerDown);
-    canvas.addEventListener("pointermove", setPointer);
-    canvas.addEventListener("pointerenter", onPointerEnter);
-    canvas.addEventListener("pointerleave", onPointerLeave);
-    canvas.addEventListener("pointerup", onPointerUp);
-    canvas.addEventListener("pointercancel", onPointerLeave);
-    canvas.addEventListener("touchstart", onTouchStart, { passive: false });
-    canvas.addEventListener("touchmove", onTouchMove, { passive: false });
-    canvas.addEventListener("touchend", onTouchEnd);
-    canvas.addEventListener("touchcancel", onTouchEnd);
+    const evTarget: HTMLElement = container;
+    evTarget.addEventListener("pointerdown", onPointerDown, { capture: true });
+    evTarget.addEventListener("pointermove", setPointer, { capture: true });
+    evTarget.addEventListener("pointerenter", onPointerEnter, { capture: true });
+    evTarget.addEventListener("pointerleave", onPointerLeave, { capture: true });
+    evTarget.addEventListener("pointerup", onPointerUp, { capture: true });
+    evTarget.addEventListener("pointercancel", onPointerLeave, { capture: true });
+    evTarget.addEventListener("touchstart", onTouchStart, { passive: false, capture: true });
+    evTarget.addEventListener("touchmove", onTouchMove, { passive: false, capture: true });
+    evTarget.addEventListener("touchend", onTouchEnd, { capture: true });
+    evTarget.addEventListener("touchcancel", onTouchEnd, { capture: true });
     window.addEventListener("blur", onPointerLeave);
+
+    const ro = new ResizeObserver(() => onResize());
+    ro.observe(container);
+
+    function onContextLost(e: Event) {
+      e.preventDefault();
+      disposed = true;
+      setGlReady(false);
+    }
+    canvas.addEventListener("webglcontextlost", onContextLost);
 
     initSim();
 
@@ -870,20 +906,23 @@ export function FluidReveal({
       disposed = true;
       cancelAnimationFrame(raf);
       window.clearTimeout(leaveTimer);
-      canvas.removeEventListener("pointerdown", onPointerDown);
-      canvas.removeEventListener("pointermove", setPointer);
-      canvas.removeEventListener("pointerenter", onPointerEnter);
-      canvas.removeEventListener("pointerleave", onPointerLeave);
-      canvas.removeEventListener("pointerup", onPointerUp);
-      canvas.removeEventListener("pointercancel", onPointerLeave);
-      canvas.removeEventListener("touchstart", onTouchStart);
-      canvas.removeEventListener("touchmove", onTouchMove);
-      canvas.removeEventListener("touchend", onTouchEnd);
-      canvas.removeEventListener("touchcancel", onTouchEnd);
+      ro.disconnect();
+      evTarget.removeEventListener("pointerdown", onPointerDown, { capture: true });
+      evTarget.removeEventListener("pointermove", setPointer, { capture: true });
+      evTarget.removeEventListener("pointerenter", onPointerEnter, { capture: true });
+      evTarget.removeEventListener("pointerleave", onPointerLeave, { capture: true });
+      evTarget.removeEventListener("pointerup", onPointerUp, { capture: true });
+      evTarget.removeEventListener("pointercancel", onPointerLeave, { capture: true });
+      evTarget.removeEventListener("touchstart", onTouchStart, { capture: true });
+      evTarget.removeEventListener("touchmove", onTouchMove, { capture: true });
+      evTarget.removeEventListener("touchend", onTouchEnd, { capture: true });
+      evTarget.removeEventListener("touchcancel", onTouchEnd, { capture: true });
       window.removeEventListener("blur", onPointerLeave);
+      canvas.removeEventListener("webglcontextlost", onContextLost);
 
-      for (const t of createdTextures) gl.deleteTexture(t);
-      for (const f of createdFbos) gl.deleteFramebuffer(f);
+      for (const t of simTextures) gl.deleteTexture(t);
+      for (const f of simFbos) gl.deleteFramebuffer(f);
+      for (const t of imageTextures) gl.deleteTexture(t);
       for (const prog of [progSplat, progAdvect, progDiv, progPressure, progGradient, progClear, progDisplay]) {
         gl.deleteProgram(prog.p);
       }
