@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Download } from "lucide-react";
 
 type Focus = { x: number; y: number };
 
@@ -20,6 +21,8 @@ type FluidRevealProps = {
   baseZoom?: number;
   /** >1 zooms into the reveal image (1 = cover). */
   revealZoom?: number;
+  /** Optional label for the download button. When set, download button is shown. */
+  downloadLabel?: string;
 };
 
 type Splat = { x: number; y: number; dx: number; dy: number };
@@ -320,6 +323,7 @@ export function FluidReveal({
   revealFocus = { x: 0.5, y: 0.3 },
   baseZoom = 1,
   revealZoom = 1,
+  downloadLabel,
 }: FluidRevealProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -934,23 +938,33 @@ export function FluidReveal({
   return (
     <div
       ref={containerRef}
-      className={`relative aspect-square w-full touch-none overflow-hidden rounded-lg bg-black select-none ${className}`}
-      style={{ cursor: "none" }}
+      className={`relative aspect-square w-full overflow-hidden rounded-lg bg-black select-none ${glReady ? "touch-none" : ""} ${className}`}
+      style={{ cursor: glReady ? "none" : "auto" }}
     >
-      {!glReady ? (
-        <img
-          src={baseSrc}
-          alt=""
-          draggable={false}
-          className="absolute inset-0 h-full w-full object-cover select-none"
-          style={{ objectPosition: `${baseFocus.x * 100}% ${(1 - baseFocus.y) * 100}%` }}
-        />
-      ) : null}
+      <img
+        src={baseSrc}
+        alt=""
+        draggable={false}
+        className="absolute inset-0 h-full w-full object-cover select-none"
+        style={{ objectPosition: `${baseFocus.x * 100}% ${(1 - baseFocus.y) * 100}%` }}
+      />
       <canvas
         ref={canvasRef}
-        className={`absolute inset-0 h-full w-full touch-none ${glReady ? "opacity-100" : "opacity-0"}`}
-        style={{ touchAction: "none" }}
+        aria-hidden={!glReady}
+        className={`absolute inset-0 h-full w-full ${glReady ? "opacity-100" : "pointer-events-none opacity-0"}`}
+        style={{ touchAction: glReady ? "none" : "auto" }}
       />
+      {downloadLabel ? (
+        <a
+          href={baseSrc}
+          download
+          aria-label={downloadLabel}
+          title={downloadLabel}
+          className="absolute top-2 right-2 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/55 text-white/90 backdrop-blur-sm transition hover:bg-black/75 focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:outline-none"
+        >
+          <Download size={16} />
+        </a>
+      ) : null}
       {hint ? (
         <div className="pointer-events-none absolute bottom-2 left-0 right-0 text-center text-[10px] tracking-wide text-white/45 select-none">
           {hint}

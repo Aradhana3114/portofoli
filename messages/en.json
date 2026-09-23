@@ -39,7 +39,8 @@
     "highlySatisfactory": "Highly Satisfactory",
     "techStack": "Tech Stack",
     "myFocus": "My Focus",
-    "revealHint": "Move cursor to reveal"
+    "revealHint": "Tap & drag to reveal",
+    "downloadPhoto": "Download photo"
   },
   "works": {
     "title1": "Selected",
